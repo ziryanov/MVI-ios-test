@@ -1,0 +1,88 @@
+PODS:
+  - Alamofire (5.4.3)
+  - DeclarativeTVC (2.0.0):
+    - DifferenceKit
+  - DifferenceKit (1.1.5):
+    - DifferenceKit/Core (= 1.1.5)
+    - DifferenceKit/UIKitExtension (= 1.1.5)
+  - DifferenceKit/Core (1.1.5)
+  - DifferenceKit/UIKitExtension (1.1.5):
+    - DifferenceKit/Core
+  - DITranquillity (4.1.1):
+    - SwiftLazy (>= 1.1.6)
+  - Dodo (13.0.0)
+  - DTTextField (0.4.0)
+  - IHKeyboardAvoiding (4.7)
+  - LGButton (1.1.6)
+  - LTHRadioButton (1.2.3)
+  - Moya/Core (14.0.0):
+    - Alamofire (~> 5.0)
+  - Moya/RxSwift (14.0.0):
+    - Moya/Core
+    - RxSwift (~> 5.0)
+  - NVActivityIndicatorView (5.1.1):
+    - NVActivityIndicatorView/Base (= 5.1.1)
+  - NVActivityIndicatorView/Base (5.1.1)
+  - Parchment (3.0.1)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
+  - SwiftLazy (1.1.9)
+
+DEPENDENCIES:
+  - DeclarativeTVC
+  - DITranquillity
+  - Dodo
+  - DTTextField
+  - IHKeyboardAvoiding
+  - LGButton
+  - LTHRadioButton
+  - Moya/RxSwift
+  - NVActivityIndicatorView
+  - Parchment
+  - RxCocoa
+  - RxSwift
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - DeclarativeTVC
+    - DifferenceKit
+    - DITranquillity
+    - Dodo
+    - DTTextField
+    - IHKeyboardAvoiding
+    - LGButton
+    - LTHRadioButton
+    - Moya
+    - NVActivityIndicatorView
+    - Parchment
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+    - SwiftLazy
+
+SPEC CHECKSUMS:
+  Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
+  DeclarativeTVC: a2a9961cac6f3e0f5f9f18a96a484c7033e593c7
+  DifferenceKit: 516f12e336ed65a3a0665847b5c3cb5cad4bd4ea
+  DITranquillity: f03d76911e8b63df0a4d393932de9a9a415938e7
+  Dodo: e13a732c6f95b48fbf7001d483c0f4ee967a78dd
+  DTTextField: 4b9bab01faec50a98d42d24ba39ed122461f866f
+  IHKeyboardAvoiding: 4cae0880c3975feffa278495df894c5166e71ad0
+  LGButton: 9f0a7f9d3030e3f504108342f6b66d64a429371b
+  LTHRadioButton: b20980614572f7911272a6b8aa79ec0fdc9a74d4
+  Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
+  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
+  Parchment: 466a1cfb6151780db8acb4bbedc2d9c6bfa1e2ff
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SwiftLazy: 1657354f43dbd6a0a79e00ad67558d655c77bdc9
+
+PODFILE CHECKSUM: 780afed7b6e6945e5fe563710aed1cd444098c44
+
+COCOAPODS: 1.10.1

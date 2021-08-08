@@ -19,14 +19,14 @@ enum API {
     case getFeedIds
     case getInterestingIds
     case getFirstTwo
-    case getPosts(ids: [PostContainer.ModelId])
+    case getPosts(ids: [PostsContainer.ModelId])
 
-    case getImportantPosts(perPage: Int, after: PostContainer.ModelId?)
+    case getImportantPosts(perPage: Int, after: PostsContainer.ModelId?)
 
-    case getFollowers(userId: UserContainer.ModelId, perPage: Int, after: UserContainer.ModelId?)
+    case getFollowers(userId: UsersContainer.ModelId, perPage: Int, after: UsersContainer.ModelId?)
 
-    case likeDislike(postId: PostContainer.ModelId, like: Bool)
-    case loadUser(userId: UserContainer.ModelId)
+    case likeDislike(postId: PostsContainer.ModelId, like: Bool)
+    case loadUser(userId: UsersContainer.ModelId)
 }
 
 extension API: TargetType {
@@ -76,59 +76,55 @@ extension API: TargetType {
             return .get
         }
     }
-    
-    var sampleData: Data {
-        return Data()
-    }
 
-//    var sampleData: Data {
-//        switch self {
-//        case .sessionCheck:
-//            let result = MockServer.shared.checkSession() ? "{\"success\": true}" : ""
-//            return result.data(using: .utf8)!
-//        case .logout:
-//            MockServer.shared.logout()
-//            return "".data(using: .utf8)!
-//        case .signIn(let identifier, let password):
-//            if let res = MockServer.shared.signIn(identifier: identifier, password: password) {
-//                return try! JSONEncoder().encode(res)
-//            }
-//            return "".data(using: .utf8)!
-//        case .signUp(let identifier, let password):
-//            if let res = MockServer.shared.signUp(identifier: identifier, password: password) {
-//                return try! JSONEncoder().encode(res)
-//            }
-//            return "".data(using: .utf8)!
-//        case .getProfile:
-//            if let res = MockServer.shared.getProfile() {
-//                return try! JSONEncoder().encode(res)
-//            }
-//            return "error".data(using: .utf8)!
-//        case .likeDislike(let id, let like):
-//            MockServer.shared.likeDislikePost(id: id, like: like)
-//            return "success".data(using: .utf8)!
-//        case .checkIdentifierAvailability(let identifier):
-//            if identifier.hasPrefix("+1") {
-//                return "{\"not_available\": true}".data(using: .utf8)!
-//            } else {
-//                return "{\"not_available\": false}".data(using: .utf8)!
-//            }
-//        case .loadUser(let id):
-//            return MockServer.shared.user(id: id)
-//        case .getFeedIds:
-//            return MockServer.shared.feedIds()
-//        case .getInterestingIds:
-//            return MockServer.shared.interestingIds()
-//        case .getPosts(let ids):
-//            return MockServer.shared.getPosts(ids: ids)
-//        case .getFirstTwo:
-//            return MockServer.shared.firstTwo()
-//        case .getImportantPosts(let perPage, let after):
-//            return MockServer.shared.getGeneralPosts(perPage: perPage, after: after)
-//        case .getFollowers(let userId, let perPage, let after):
-//            return MockServer.shared.getFollowers(userId: userId, perPage: perPage, after: after)
-//        }
-//    }
+    var sampleData: Data {
+        switch self {
+        case .sessionCheck:
+            let result = MockServer.shared.checkSession() ? "{\"success\": true}" : ""
+            return result.data(using: .utf8)!
+        case .logout:
+            MockServer.shared.logout()
+            return "".data(using: .utf8)!
+        case .signIn(let identifier, let password):
+            if let res = MockServer.shared.signIn(identifier: identifier, password: password) {
+                return try! JSONEncoder().encode(res)
+            }
+            return "".data(using: .utf8)!
+        case .signUp(let identifier, let password):
+            if let res = MockServer.shared.signUp(identifier: identifier, password: password) {
+                return try! JSONEncoder().encode(res)
+            }
+            return "".data(using: .utf8)!
+        case .getProfile:
+            if let res = MockServer.shared.getProfile() {
+                return try! JSONEncoder().encode(res)
+            }
+            return "error".data(using: .utf8)!
+        case .likeDislike(let id, let like):
+            MockServer.shared.likeDislikePost(id: id, like: like)
+            return "success".data(using: .utf8)!
+        case .checkIdentifierAvailability(let identifier):
+            if identifier.hasPrefix("+1") {
+                return "{\"not_available\": true}".data(using: .utf8)!
+            } else {
+                return "{\"not_available\": false}".data(using: .utf8)!
+            }
+        case .loadUser(let id):
+            return MockServer.shared.user(id: id)
+        case .getFeedIds:
+            return MockServer.shared.feedIds()
+        case .getInterestingIds:
+            return MockServer.shared.interestingIds()
+        case .getPosts(let ids):
+            return MockServer.shared.getPosts(ids: ids)
+        case .getFirstTwo:
+            return MockServer.shared.firstTwo()
+        case .getImportantPosts(let perPage, let after):
+            return MockServer.shared.getGeneralPosts(perPage: perPage, after: after)
+        case .getFollowers(let userId, let perPage, let after):
+            return MockServer.shared.getFollowers(userId: userId, perPage: perPage, after: after)
+        }
+    }
 
     var task: Task {
         switch self {

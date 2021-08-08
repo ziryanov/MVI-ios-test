@@ -7,6 +7,6 @@
 
 import Foundation
 
-public class Middlewares {
-    static var configurations = [MiddlewareConfiguration]()
-}
+//public class Middlewares {
+//    static var configurations = [MiddlewareConfiguration]()
+//}

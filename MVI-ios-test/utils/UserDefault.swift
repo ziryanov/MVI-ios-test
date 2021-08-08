@@ -9,7 +9,6 @@ import Foundation
 
 @propertyWrapper
 public class UserDefault<T> {
-    
     let key: String
 
     public init(_ key: String) {

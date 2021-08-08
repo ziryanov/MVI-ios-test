@@ -7,17 +7,17 @@
 
 import Foundation
 import Moya
-import Combine
+import RxSwift
 
 final class Network {
     private let provider: MoyaProvider<API>
-    
+   
     init(provider: MoyaProvider<API>) {
         self.provider = provider
     }
 
-    func request(_ token: API) -> AnyPublisher<Response, MoyaError> {
-        return provider.requestPublisher(token).filterSuccessfulStatusCodes()
+    func request(_ token: API) -> Single<Response> {
+        return provider.rx.request(token).filterSuccessfulStatusCodes()
     }
 }
 

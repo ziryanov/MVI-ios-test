@@ -7,11 +7,8 @@
 
 import Foundation
 
-struct Session {
-    @UserDefault("loggedId")
-    static var loggedId: UserContainer.ModelId?
-    
-    var hasCookies: Bool {
-        return Session.loggedId != nil
+final class Session {
+    var hasCookies: Bool? {
+        return MockServer.shared.loggedUserId != nil
     }
 }
