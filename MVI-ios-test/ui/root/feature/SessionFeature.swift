@@ -64,7 +64,7 @@ final class SessionFeature: BaseFeature<SessionFeature.Wish, SessionState, Sessi
             }
         }
         
-        func actor<Holder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder : StateHolder, SessionState == Holder.State {
+        func actor<Holder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder : StateHolder, State == Holder.State {
             switch action {
             case .checkSession:
                 return checkSession()
@@ -79,25 +79,27 @@ final class SessionFeature: BaseFeature<SessionFeature.Wish, SessionState, Sessi
             case .signedIn:
                 return .just(Effect(.signedIn))
             case .logout:
-                return .just(Effect(.waitingAuth))
+                return logout()
+                    .map { _ in Effect(.waitingAuth) }
+                    .asObservable()
             }
         }
         
-        func news(from action: Action, effect: Effect, state: SessionState) -> News? {
+        func news(from action: Action, effect: Effect, state: State) -> News? {
             if action == .loadProfile, let error = effect.error {
                 return .loadProfileError(error)
             }
             return nil
         }
         
-        func postProcessor(oldState: SessionState, action: Action, effect: Effect, state: SessionState) -> Action? {
+        func postProcessor(oldState: State, action: Action, effect: Effect, state: State) -> Action? {
             if effect.changeStateTo == .loadingProfile {
                 return .loadProfile
             }
             return nil
         }
         
-        func reduce(with effect: Effect, state: inout SessionState) {
+        func reduce(with effect: Effect, state: inout State) {
             state = effect.changeStateTo
         }
         
@@ -122,6 +124,11 @@ final class SessionFeature: BaseFeature<SessionFeature.Wish, SessionState, Sessi
                 .request(.getProfile)
                 .map(to: ProfileDTO.self)
                 .map { $0.id }
+        }
+        
+        private func logout() -> Single<Response> {
+            network
+                .request(.logout)
         }
     }
 }

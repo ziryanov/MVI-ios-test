@@ -92,11 +92,13 @@ open class BaseFeature<Wish, State, News, InnerPart: InnerFeatureProtocol>: Feat
         self.innerPart = innerPart
         stateSubject = .init(value: initialState)
 
-        innerPart.bootstrapper()
-            .subscribe(onNext: { [weak self] in
-                self?.startActor(with: $0)
-            })
-            .disposed(by: disposeBag)
+        DispatchQueue.main.async {
+            innerPart.bootstrapper()
+                .subscribe(onNext: { [weak self] in
+                    self?.startActor(with: $0)
+                })
+                .disposed(by: self.disposeBag)
+        }
     }
     
     private func startActor(with action: InnerPart.Action) {

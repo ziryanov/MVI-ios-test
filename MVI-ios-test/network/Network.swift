@@ -21,15 +21,18 @@ final class Network {
     }
 }
 
-public enum ApiError: Swift.Error, CustomDebugStringConvertible {
-    case mappingFailed
-}
-
-public extension ApiError {
-    var debugDescription: String {
-        switch self {
-        case .mappingFailed:
-            return "Mapping failed"
-        }
+struct ApiError: Swift.Error {
+    init(reason: ApiError.Reason, serverError: String? = nil) {
+        self.reason = reason
+        self.serverError = serverError
     }
+    
+    enum Reason {
+        case mappingFailed
+        case cancelled
+        case internalLogicError
+    }
+    
+    let reason: Reason
+    let serverError: String?
 }

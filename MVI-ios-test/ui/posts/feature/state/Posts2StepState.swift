@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Posts2StepSource {
+enum Posts2StepSource: Equatable {
     case general
     case interesting
     case notInteresting

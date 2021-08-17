@@ -30,10 +30,6 @@ final class UserDTO: Codable {
     var avatar: String?
     var username: String?
     var online: TimeInterval?
-    //temp
-    var identifier: String?
-    var password: String?
-    //
     
     var followersCount: Int?
     var followedByMe: Bool?
@@ -54,8 +50,6 @@ final class UserDTO: Codable {
         case followers
         case posts = "posts"
         case likedPosts = "likes"
-        case identifier
-        case password
     }
 
     init(id: Int?, avatar: String?, username: String?, online: TimeInterval?, followersCount: Int?, followedByMe: Bool?, followers: [UserBasicDTO]?, additionalIndo: String?, posts: [PostsContainer.ModelId]?, likedPosts: [PostsContainer.ModelId]?) {

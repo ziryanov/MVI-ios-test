@@ -39,7 +39,7 @@ enum AuthVCModule {
     final class Presenter: PresenterBase<ViewController, AuthFeature> {
         
         override func createView() -> ViewController {
-            return AuthVC.controllerFromStoryboard()
+            return ViewController.controllerFromStoryboard()
         }
         
         override func props(for state: State) -> Props {

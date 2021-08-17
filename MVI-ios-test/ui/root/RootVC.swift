@@ -9,7 +9,7 @@ import UIKit
 import NVActivityIndicatorView
 
 final class RootVC: VC<RootVCModule.Props, Void>, Consumer {
-    typealias Consumable = SessionFeature.News
+    typealias Consumable = RouterFeature.News
     
     public class override var storyboardName: String {
         return "Root"
@@ -23,14 +23,14 @@ final class RootVC: VC<RootVCModule.Props, Void>, Consumer {
         activityView.startAnimating()
     }
     
-    private var currentScreen: Router.Screen?
-    override func render(props: RootVCModule.Props) {
-        switch props {
-        case .loading:
-            break
-        case .rootScreen(let router):
+    override func render(props: RootVCModule.Props) { }
+
+    private var rootScreen: Router.Screen?
+    func accept(_ t: Consumable) {
+        switch t {
+        case .changeRoot(let router):
             activityView.stopAnimating()
-            guard router.screen != currentScreen else { return }
+            guard rootScreen != router.screen else { fatalError("no!") }
             let vc = router.craeteViewController()
             if let child = children.first {
                 addChild(vc)
@@ -42,10 +42,28 @@ final class RootVC: VC<RootVCModule.Props, Void>, Consumer {
             } else {
                 add(vc)
             }
-            currentScreen = router.screen
+            rootScreen = router.screen
+        case .showModal(let router):
+            let vc = router.craeteViewController()
+            topNVC()?.viewControllers.last?.present(vc, animated: true)
+        case .push(let router):
+            let vc = router.craeteViewController()
+            topNVC()?.pushViewController(vc, animated: true)
         }
     }
-
-    func accept(_ t: SessionFeature.News) {}
+    
+    private func topNVC() -> UINavigationController? {
+        if var modal = presentedViewController {
+            while let next = modal.presentedViewController {
+                modal = next
+            }
+            return modal.navigationController
+        } else if let child = children.first as? UINavigationController {
+            return child
+        } else if let child = children.first as? UITabBarController {
+            return child.selectedViewController as? UINavigationController
+        }
+        return nil
+    }
 }
 

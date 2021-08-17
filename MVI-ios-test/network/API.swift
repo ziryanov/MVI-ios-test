@@ -91,10 +91,10 @@ extension API: TargetType {
             }
             return "".data(using: .utf8)!
         case .signUp(let identifier, let password):
-            if let res = MockServer.shared.signUp(identifier: identifier, password: password) {
+            if let res = try? MockServer.shared.signUp(identifier: identifier, password: password) {
                 return try! JSONEncoder().encode(res)
             }
-            return "".data(using: .utf8)!
+            return "{\"error\": \"already registered\"}".data(using: .utf8)!
         case .getProfile:
             if let res = MockServer.shared.getProfile() {
                 return try! JSONEncoder().encode(res)

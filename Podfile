@@ -16,9 +16,14 @@ target 'MVI-ios-test' do
   pod 'IHKeyboardAvoiding'
   pod 'DTTextField'
   pod 'LTHRadioButton'
-  pod 'LGButton'
   pod 'DeclarativeTVC'
   pod 'Parchment'
+  pod 'Kingfisher'
+  pod 'DateToolsSwift'
+  pod 'FantasticSnowflake'
+  pod 'Parchment'
+  pod 'LGButton', :git => 'https://github.com/ziryanov/LGButton.git'
+  pod 'SwiftIconFont'
   
   target 'MVI-ios-testTests' do
     inherit! :search_paths

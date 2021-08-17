@@ -9,7 +9,7 @@ import Foundation
 
 final class Post2StepFeature: PostsBaseFeature<Posts2StepState, Post2StepFeature.Requester> {
     
-    init(source: Posts2StepSource, containerFeature: PostsContainerFeature, network: Network, requester: Requester) {
+    init(source: Posts2StepSource, containerFeature: PostsContainerFeature, network: Network) {
         super.init(state: .init(source: source), containerFeature: containerFeature, requester: Requester(network: network))
     }
     
@@ -45,7 +45,9 @@ final class Post2StepFeature: PostsBaseFeature<Posts2StepState, Post2StepFeature
                 .request(token)
                 .mapJSON()
                 .map {
-                    guard let ids = $0 as? [PostsContainer.ModelId] else { throw ApiError.mappingFailed }
+                    guard let ids = $0 as? [PostsContainer.ModelId] else {
+                        throw ApiError(reason: .mappingFailed, serverError: NetworkHelper.findServerError(errorSearchDict: $0))
+                    }
                     return ids
                 }
         }
@@ -62,7 +64,7 @@ final class Post2StepFeature: PostsBaseFeature<Posts2StepState, Post2StepFeature
         func refresh(state: State, perPage: Int) -> Single<RefreshResult> {
             self.requestIds(state: state)
                 .flatMap { [weak self] ids -> Single<RefreshResult> in
-                    guard let self = self else { return .error(ApiError.mappingFailed) }
+                    guard let self = self else { return .error(ApiError(reason: .cancelled)) }
                     let needLoadIds = Array(ids.prefix(perPage))
                     return self
                         .requestModels(ids: needLoadIds)
@@ -71,7 +73,7 @@ final class Post2StepFeature: PostsBaseFeature<Posts2StepState, Post2StepFeature
         }
         
         func loadMore(state: State, perPage: Int) -> Single<[PostsContainer.Model]> {
-            guard let allIds = state.allIds else { return .error(ApiError.mappingFailed) }
+            guard let allIds = state.allIds else { return .error(ApiError(reason: .internalLogicError)) }
             let indexFrom = state.loaded.count
             let needLoadIds = Array(allIds.suffix(from: indexFrom).prefix(perPage))
             return self.requestModels(ids: needLoadIds)

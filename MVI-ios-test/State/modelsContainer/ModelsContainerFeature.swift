@@ -31,11 +31,11 @@ class ModelsContainerFeature<Container: ModelsContainerProtocol>: BaseFeature<Mo
         
         fileprivate init() {}
 
-        func reduce(with effect: UpdateModelsWish, state: inout Container) {
+        func reduce(with effect: Effect, state: inout State) {
             state.updateModels(effect.updated)
         }
         
-        func news(from action: UpdateModelsWish, effect: UpdateModelsWish, state: Container) -> News? {
+        func news(from action: Action, effect: Effect, state: State) -> News? {
             ModelsUpdatedNews(updated: effect.updated, updater: effect.updater)
         }
     }

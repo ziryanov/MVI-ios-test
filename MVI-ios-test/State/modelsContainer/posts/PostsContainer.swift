@@ -13,7 +13,7 @@ struct PostsContainer: ModelsContainerProtocol {
     
     var models = [Int: Post]()
 
-    struct Post: ModelWithId {
+    struct Post: ModelWithId, Hashable, Equatable {
         typealias ModelId = Int
         let id: ModelId
         let userBasic: UsersContainer.BasicUserInfo

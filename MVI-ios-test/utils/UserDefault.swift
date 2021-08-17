@@ -20,7 +20,11 @@ public class UserDefault<T> {
             return UserDefaults.standard.object(forKey: key) as? T
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: key)
+            if let newValue = newValue {
+                UserDefaults.standard.set(newValue, forKey: key)
+            } else {
+                UserDefaults.standard.removeObject(forKey: key)
+            }
             UserDefaults.standard.synchronize()
         }
     }

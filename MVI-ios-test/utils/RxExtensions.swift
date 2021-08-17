@@ -24,6 +24,19 @@ extension Completable {
     }
 }
 
+extension Maybe {
+    static func just(_ elem: Element, if block: @escaping () -> Bool) -> Maybe<Element> {
+        return Maybe<Element>.create { observer in
+            if block() {
+                observer(.success(elem))
+            } else {
+                observer(.completed)
+            }
+            return Disposables.create()
+        }
+    }
+}
+
 fileprivate var disposeBagContext: UInt8 = 0
 fileprivate var disposeBagsCollectionContext: UInt8 = 0
 extension Reactive where Base: AnyObject {

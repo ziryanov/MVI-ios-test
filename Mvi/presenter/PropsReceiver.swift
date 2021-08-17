@@ -23,33 +23,54 @@ protocol HasPresenter: AnyObject {
     var presenter: PresenterProtocol! { get set }
 }
 
-open class VC<Props, Actions>: UIViewController, PropsReceiver, ActionsReceiver, HasPresenter {
+enum PropsReceiverSubscriptionBehaviour {
+    case always
+    case onAppearing
+}
+
+protocol PropsReceiverWithSubscriptionBehaviour {
+    static var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour { get }
+}
+
+open class VC<Props, Actions>: UIViewController, PropsReceiver, ActionsReceiver, HasPresenter, PropsReceiverWithSubscriptionBehaviour {
     var presenter: PresenterProtocol!
+    
+    static var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
+        return .onAppearing
+    }
+    
+    open override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if type(of: self).subscriptionBehaviour == .always {
+            presenter.subscribe()
+        }
+    }
     
     override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        if type(of: self).subscriptionBehaviour == .onAppearing {
 //        if ReduxVMSettings.logSubscribeMessages {
 //            print("subscribe presenter \(type(of: self))")
 //        }
-        presenter.subscribe()
+        
+            presenter.subscribe()
+        }
     }
 
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
+        if type(of: self).subscriptionBehaviour == .onAppearing {
 //        if ReduxVMSettings.logSubscribeMessages {
 //            print("unsubscribe presenter \(type(of: self))")
 //        }
-        presenter.unsubscribe()
+            presenter.unsubscribe()
+        }
     }
     
     //to override
-    public func render(props: Props) {
-        
-    }
-    
-    public func apply(actions: Actions) {
-        
-    }
+    public func render(props: Props) { }
+    public func apply(actions: Actions) { }
 }

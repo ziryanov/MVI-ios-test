@@ -62,33 +62,50 @@ final class MockServer {
     }
     private var follows: [MockFollowerDTO]
     
-    private let version = "1.7.0"
+    private let version = "1.7.4"
     
     @UserDefault("loggedUserId")
     var loggedUserId: Int?
     
-    var meUser: UserDTO
+    struct RegisteredUser: Codable {
+        let id: Int
+        let identifier: String
+        let password: String
+    }
+    private var registeredUser: [RegisteredUser]
     
-    func signUp(identifier: String, password: String) -> UserDTO? {
-        meUser.identifier = identifier
-        meUser.password = password
-        saveMeUser()
-        loggedUserId = meUser.id
-        return meUser
+    enum MockServerErrors: Error {
+        case signUpAlreadyregistered
     }
     
-    func signIn(identifier: String, password: String) -> UserDTO? {
-        let user = users.first(where: { $0.identifier == identifier && $0.password == password })
-        loggedUserId = user?.id
+    func signUp(identifier: String, password: String) throws -> UserDTO {
+        guard !registeredUser.contains(where: { $0.identifier == identifier }) else {
+            throw MockServerErrors.signUpAlreadyregistered
+        }
+        let userIds = users.map(\.id)
+        let alreadyregisterdIds = registeredUser.map(\.id)
+        let freeIds = Set(userIds).subtracting(Set(alreadyregisterdIds))
+        let newUserId = freeIds.randomElement()!!
+        
+        let user = users.first(where: { $0.id == newUserId })!
+        loggedUserId = user.id
+        
+        let registered = RegisteredUser(id: newUserId, identifier: identifier, password: password)
+        registeredUser.append(registered)
+        saveRegistered()
+        
         return user
     }
     
-    private var loggedUser: UserDTO? {
-        users.first(where: { $0.id == loggedUserId })
+    func signIn(identifier: String, password: String) -> UserDTO? {
+        guard let registered = registeredUser.first(where: { $0.identifier == identifier && $0.password == password }),
+              let user = users.first(where: { $0.id == registered.id }) else { return nil }
+        loggedUserId = user.id
+        return user
     }
     
     func checkSession() -> Bool {
-        return loggedUser != nil
+        return loggedUserId != nil
     }
     
     func logout() {
@@ -96,7 +113,8 @@ final class MockServer {
     }
     
     func getProfile() -> UserDTO? {
-        loggedUser
+        guard registeredUser.first(where: { $0.id == loggedUserId }) != nil else { return nil }
+        return users.first(where: { $0.id == loggedUserId })
     }
     
     func likeDislikePost(id: PostsContainer.ModelId, like: Bool) {
@@ -104,35 +122,39 @@ final class MockServer {
         guard post.likedByMe != like else {
             return
         }
+        
+        let meUser = getProfile()
+        
         if like {
-            loggedUser?.likedPosts?.append(id)
+            meUser?.likedPosts?.append(id)
             post.likesCount! += 1
             post.likedByMe = true
         } else {
-            if let index = loggedUser?.likedPosts?.firstIndex(of: id) {
-                loggedUser?.likedPosts?.remove(at: index)
+            if let index = meUser?.likedPosts?.firstIndex(of: id) {
+                meUser?.likedPosts?.remove(at: index)
+                post.likesCount! -= 1
             }
-            post.likesCount! -= 1
             post.likedByMe = false
         }
-        save()
+        saveUsers()
+        savePosts()
     }
     
     func followUnfUser(id: UsersContainer.ModelId) {
-        if let index = follows.firstIndex(where: { $0.followerId == loggedUser!.id && $0.followId == id }) {
+        if let index = follows.firstIndex(where: { $0.followerId == loggedUserId && $0.followId == id }) {
             follows.remove(at: index)
         } else {
-            follows.append(MockFollowerDTO(followerId: loggedUser!.id!, followId: id))
+            follows.append(MockFollowerDTO(followerId: loggedUserId!, followId: id))
         }
-        save()
+        saveFollows()
     }
     
     private init() {
-        if let version = UserDefaults.standard.string(forKey: "mock_version"), version == self.version, let usersData = UserDefaults.standard.data(forKey: "mock_users"), let postsData = UserDefaults.standard.data(forKey: "mock_posts"), let followsData = UserDefaults.standard.data(forKey: "mock_follows"), let meUserData = UserDefaults.standard.data(forKey: "me") {
+        if let version = UserDefaults.standard.string(forKey: "mock_version"), version == self.version, let usersData = UserDefaults.standard.data(forKey: "mock_users"), let postsData = UserDefaults.standard.data(forKey: "mock_posts"), let followsData = UserDefaults.standard.data(forKey: "mock_follows"), let registeredUserData = UserDefaults.standard.data(forKey: "mock_registered") {
             users = try! JSONDecoder().decode([UserDTO].self, from: usersData)
             posts = try! JSONDecoder().decode([PostDTO].self, from: postsData)
             follows = try! JSONDecoder().decode([MockFollowerDTO].self, from: followsData)
-            meUser = try! JSONDecoder().decode(UserDTO.self, from: meUserData)
+            registeredUser = try! JSONDecoder().decode([RegisteredUser].self, from: registeredUserData)
         } else {
             var userId = 0
             func getUserId() -> Int {
@@ -188,10 +210,9 @@ final class MockServer {
                 return UserDTO(id: id, avatar: "https://i.pravatar.cc/150?img=\(id)", username: userName, online: online, followersCount: 0, followedByMe: false, followers: [], additionalIndo: words.randomElement(), posts: [], likedPosts: [])
             }
             
-            self.meUser = generateUser()
-            self.meUser.identifier = ""
+            self.registeredUser = []
             
-            let usersCount = 60
+            let usersCount = 2
             let users = (0..<usersCount).map { _ in generateUser() }
             self.users = users
             
@@ -239,23 +260,39 @@ final class MockServer {
             follows = allFollows
             
             save()
+            loggedUserId = nil
         }
     }
     
     private func save() {
         UserDefaults.standard.setValue(version, forKey: "mock_version")
-        let usersData = try! JSONEncoder().encode(users)
-        UserDefaults.standard.setValue(usersData, forKey: "mock_users")
-        let postsData = try! JSONEncoder().encode(posts)
-        UserDefaults.standard.setValue(postsData, forKey: "mock_posts")
-        let followsData = try! JSONEncoder().encode(follows)
-        UserDefaults.standard.setValue(followsData, forKey: "mock_follows")
-        saveMeUser()
+        saveUsers()
+        savePosts()
+        saveFollows()
     }
     
-    private func saveMeUser() {
-        let meUserData = try! JSONEncoder().encode(meUser)
-        UserDefaults.standard.setValue(meUserData, forKey: "me")
+    private func savePosts() {
+        let postsData = try! JSONEncoder().encode(posts)
+        UserDefaults.standard.setValue(postsData, forKey: "mock_posts")
+        UserDefaults.standard.synchronize()
+    }
+    
+    private func saveFollows() {
+        let followsData = try! JSONEncoder().encode(follows)
+        UserDefaults.standard.setValue(followsData, forKey: "mock_follows")
+        UserDefaults.standard.synchronize()
+    }
+    
+    private func saveUsers() {
+        let usersData = try! JSONEncoder().encode(users)
+        UserDefaults.standard.setValue(usersData, forKey: "mock_users")
+        UserDefaults.standard.synchronize()
+    }
+    
+    private func saveRegistered() {
+        let data = try! JSONEncoder().encode(registeredUser)
+        UserDefaults.standard.setValue(data, forKey: "mock_registered")
+        UserDefaults.standard.synchronize()
     }
 }
 

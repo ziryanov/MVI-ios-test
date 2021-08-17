@@ -10,39 +10,34 @@ import Moya
 import RxSwift
 
 extension PrimitiveSequenceType where Trait == SingleTrait, Element == Response {
-    public func map<T: Decodable>(to: T.Type, rootKeyPath: String? = nil) -> Single<T> {
+    func map<T: Decodable>(to: T.Type, rootKeyPath: String? = nil) -> Single<T> {
         return map { result -> T in
             let data: Data
             if let rootKeyPath = rootKeyPath {
-                var dict: Any? = try result.mapJSON()
-                dict = (dict as? [String: Any])?[keyPath: rootKeyPath]
+                let rootDict: Any? = try result.mapJSON()
+                let dict = (rootDict as? [String: Any])?[keyPath: rootKeyPath]
                 guard let json = dict else {
-                    throw ApiError.mappingFailed
+                    throw ApiError(reason: .mappingFailed, serverError: NetworkHelper.findServerError(errorSearchDict: rootDict))
                 }
                 data = try JSONSerialization.data(withJSONObject: json, options: [])
             } else {
                 data = result.data
             }
-            let mapped = try JSONDecoder().decode(to, from: data)
+            guard let mapped = try? JSONDecoder().decode(to, from: data) else {
+                throw ApiError(reason: .mappingFailed, serverError: NetworkHelper.findServerError(response: result))
+            }
             return mapped
         }
     }
+}
 
-//    public func map<T: Decodable>(to: [T].Type, rootKeyPath: String? = nil) -> Single<[T]> {
-//        return map { result -> [T] in
-//            let data: Data
-//            if let rootKeyPath = rootKeyPath {
-//                var dict: Any? = try result.mapJSON()
-//                dict = (dict as? [String: Any])?[keyPath: rootKeyPath]
-//                guard let json = dict else {
-//                    throw ApiError.mappingFailed
-//                }
-//                data = try JSONSerialization.data(withJSONObject: json, options: [])
-//            } else {
-//                data = result.data
-//            }
-//            let mapped = try JSONDecoder().decode(to, from: data)
-//            return mapped
-//        }
-//    }
+enum NetworkHelper {
+    static func findServerError(errorSearchDict: Any?) -> String? {
+        return (errorSearchDict as? [String: Any])?["error"] as? String
+    }
+    
+    static func findServerError(response: Response) -> String? {
+        let rootDict = try? response.mapJSON()
+        return (rootDict as? [String: Any])?["error"] as? String
+    }
 }

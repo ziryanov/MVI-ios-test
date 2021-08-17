@@ -12,7 +12,7 @@ struct UsersContainer: ModelsContainerProtocol {
     
     var models = [Int: User]()
     
-    struct BasicUserInfo {
+    struct BasicUserInfo: Equatable, Hashable {
         var id: ModelId
         var avatar: String?
         var username: String

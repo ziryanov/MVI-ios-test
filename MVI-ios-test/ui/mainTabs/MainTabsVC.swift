@@ -1,0 +1,38 @@
+//
+//  MainTabsVC.swift
+//  MVI-ios-test
+//
+//  Created by ziryanov on 11.08.2021.
+//
+
+import UIKit
+import SwiftIconFont
+
+final class MainTabsVC: UITabBarController {
+    
+    override class var storyboardName: String {
+        return "MainTabs"
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        let router1 = Router(screen: .generalPosts)
+        let vc1 = router1.craeteViewController()
+        
+        let router2 = Router(screen: .posts(source: .interesting))
+        let vc2 = router2.craeteViewController()
+        
+        let vc3 = LogoutVC.controllerFromStoryboard()
+        
+        viewControllers = [vc1.wrapInNVC(), vc2.wrapInNVC(), vc3.wrapInNVC()]
+        
+        let iconSize = CGSize(width: 25, height: 25)
+        let icons = [ UIImage(named: "tab.feed"),
+                      UIImage(from: .fontAwesome5Solid, code: "rss-square", size: iconSize),
+                      UIImage(named: "tab.settings") ]
+        tabBar.items?.enumerated().forEach {
+            $0.1.image = icons[$0.0]
+        }
+    }
+}

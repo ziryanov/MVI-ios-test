@@ -20,15 +20,23 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & AnyO
     weak var view: View!
     let feature: PresenterFeature
 
+    private let disposeBag = DisposeBag()
     init(feature: PresenterFeature) {
         self.feature = feature
         self.view = createView()
         if let view = self.view as? HasPresenter {
             view.presenter = self
         }
+        
+        feature.news
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [weak view] in
+                view?.accept($0)
+            })
+            .disposed(by: disposeBag)
     }
 
-    private var disposeBag = DisposeBag()
+    private var subscribeDB = DisposeBag()
     public func subscribe() {
         unsubscribe()
 
@@ -40,18 +48,11 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & AnyO
                 self.render($0)
             })
 
-            .disposed(by: disposeBag)
-
-        feature.news
-            .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak view] in
-                view?.accept($0)
-            })
-            .disposed(by: disposeBag)
+            .disposed(by: subscribeDB)
     }
 
     public func unsubscribe() {
-        disposeBag = DisposeBag()
+        subscribeDB = DisposeBag()
     }
 
     private var actionsApplied = false

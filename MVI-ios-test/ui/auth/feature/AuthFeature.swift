@@ -62,7 +62,8 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
        
         enum Action {
             case wish(Wish)
-            case startValidation(AuthScreenState.TextType)
+            case internalStartRequest
+            case validate(AuthScreenState.TextType)
         }
         
         enum Effect {
@@ -79,42 +80,50 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             .wish(wish)
         }
 
-        func actor<Holder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder : StateHolder, AuthScreenState == Holder.State {
+        func actor<Holder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder : StateHolder, State == Holder.State {
             let currentState = stateHolder.state
             switch action {
             case .wish(let wish):
                 switch wish {
                 case .startRequest:
-                    let validations = validateAllFields(in: currentState)
+                    return Maybe<Effect>
+                        .just(.applyWish(wish), if: { [weak stateHolder] in
+                            stateHolder?.state.requestInProgress == false
+                        })
                         .asObservable()
-                        .flatMap { errors -> Observable<Effect> in
-                            if let requestError = errors.first?.requestError {
-                                let effectsFromValidationErrors: [Effect] = errors.compactMap {
-                                    guard let textType = $0.textType, let validationError = $0.validationError else { return nil }
-                                    return Effect.completeValidation(textType, error: validationError)
-                                }
-                                return Observable
-                                    .from(effectsFromValidationErrors)
-                                    .concat(Observable.just(Effect.requestFinishedWithError(requestError)))
-                                    .concat(Observable.error(requestError))
-                            } else {
-                                return .empty()
-                            }
-                        }
-                    
-                    let request = createRequest(state: currentState)
-                        .map({ .requestFinishedWithSuccess($0) })
-                        .catchError { _ in Single.just(Effect.requestFinishedWithError(.fromBackend("Something go wrong"))) }
-                    
-                    return Observable
-                        .just(Effect.applyWish(wish))
-                        .concat(validations)
-                        .concat(request)
-
                 default:
                     return .just(.applyWish(wish))
                 }
-            case .startValidation(let textType):
+            case .internalStartRequest:
+                let validations = validateAllFields(in: currentState)
+                    .asObservable()
+                    .flatMap { errors -> Observable<Effect> in
+                        if let requestError = errors.first?.requestError {
+                            let effectsFromValidationErrors: [Effect] = errors.compactMap {
+                                guard let textType = $0.textType, let validationError = $0.validationError else { return nil }
+                                return Effect.completeValidation(textType, error: validationError)
+                            }
+                            return Observable
+                                .from(effectsFromValidationErrors)
+                                .concat(Observable.just(Effect.requestFinishedWithError(requestError)))
+                                .concat(Observable.error(requestError))
+                        } else {
+                            return .empty()
+                        }
+                    }
+                
+                let request = createRequest(state: currentState)
+                    .map { Effect.requestFinishedWithSuccess($0) }
+                    .catchError {
+                        let text = ($0 as? ApiError)?.serverError ?? "Something go wrong"
+                        return Single.just(Effect.requestFinishedWithError(.fromBackend(text)))
+                    }
+                
+                return Observable
+                    .concat(validations)
+                    .concat(request)
+                
+            case .validate(let textType):
                 let uuid = UUID()
                 let validation = self.validation(of: textType, in: currentState)
                     .flatMapMaybe { [weak self, weak stateHolder] validationError -> Maybe<Effect> in
@@ -129,7 +138,7 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             }
         }
 
-        func reduce(with effect: Effect, state: inout AuthScreenState) {
+        func reduce(with effect: Effect, state: inout State) {
             switch effect {
             case .applyWish(let wish):
                 switch wish {
@@ -166,25 +175,28 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             }
         }
         
-        func postProcessor(oldState: AuthScreenState, action: Action, effect: Effect, state: AuthScreenState) -> Action? {
+        func postProcessor(oldState: State, action: Action, effect: Effect, state: State) -> Action? {
             if let oldEditingState = oldState.editingText, oldEditingState != state.editingText {
-                return .startValidation(oldEditingState)
+                return .validate(oldEditingState)
             }
-            if case let .applyWish(wish) = effect, case let .changeInput(textType, _) = wish, textType != state.editingText { //for debug fill all
-                return .startValidation(textType)
+            if case let .applyWish(wish) = effect, case let .changeInput(textType, _) = wish, textType != state.editingText { //for debug "fill all"
+                return .validate(textType)
             }
             if oldState.signInOrSignUp != state.signInOrSignUp {
                 switch state.identifier.validationState {
                 case .waiting:
                     break
                 default:
-                    return .startValidation(.identifier)
+                    return .validate(.identifier)
                 }
+            }
+            if oldState.requestInProgress != state.requestInProgress, state.requestInProgress {
+                return .internalStartRequest
             }
             return nil
         }
         
-        func news(from action: Action, effect: Effect, state: AuthScreenState) -> AuthFeature.News? {
+        func news(from action: Action, effect: Effect, state: State) -> News? {
             if case .requestFinishedWithError(let error) = effect {
                 return .requestFailed(error)
             }
@@ -245,7 +257,7 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             let requestError: News.RequestError
         }
         
-        private func validateAllFields(in state: State) -> Single<[ValidateAllFieldsResult]> {
+        private func validateAllFields(in state: AuthScreenState) -> Single<[ValidateAllFieldsResult]> {
             let validateIdentifier = self.validation(of: .identifier, in: state)
                 .map { error -> ValidateAllFieldsResult? in
                     guard error != nil else { return nil }

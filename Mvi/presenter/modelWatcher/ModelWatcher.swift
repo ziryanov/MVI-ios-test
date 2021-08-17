@@ -27,17 +27,17 @@ public class ModelWatcher<Model> {
         }
     }
 
-    public struct OnlyOnce: WatchProtocol {
-        private let block: (Model) -> Void
-        init(_ block: @escaping (Model) -> Void) {
-            self.block = block
-        }
-        
-        internal func apply<AModel>(model: AModel, old: AModel?) {
-            guard old == nil, let model = model as? Model else { return }
-            block(model)
-        }
-    }
+//    public struct OnlyOnce: WatchProtocol {
+//        private let block: (Model) -> Void
+//        init(_ block: @escaping (Model) -> Void) {
+//            self.block = block
+//        }
+//
+//        internal func apply<AModel>(model: AModel, old: AModel?) {
+//            guard old == nil, let model = model as? Model else { return }
+//            block(model)
+//        }
+//    }
 
     private let children: [WatchProtocol]
     fileprivate init(children: [WatchProtocol]) {

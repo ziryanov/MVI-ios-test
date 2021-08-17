@@ -28,4 +28,8 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
+    
+    func wrapInNVC() -> UINavigationController {
+        UINavigationController(rootViewController: self)
+    }
 }

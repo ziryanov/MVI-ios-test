@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (5.4.3)
+  - DateToolsSwift (5.0.0)
   - DeclarativeTVC (2.0.0):
     - DifferenceKit
   - DifferenceKit (1.1.5):
@@ -12,8 +13,12 @@ PODS:
     - SwiftLazy (>= 1.1.6)
   - Dodo (13.0.0)
   - DTTextField (0.4.0)
+  - FantasticSnowflake (2.2.0):
+    - Reindeers
   - IHKeyboardAvoiding (4.7)
-  - LGButton (1.1.6)
+  - Kingfisher (6.3.1)
+  - LGButton (1.1.6):
+    - SwiftIconFont
   - LTHRadioButton (1.2.3)
   - Moya/Core (14.0.0):
     - Alamofire (~> 5.0)
@@ -24,29 +29,41 @@ PODS:
     - NVActivityIndicatorView/Base (= 5.1.1)
   - NVActivityIndicatorView/Base (5.1.1)
   - Parchment (3.0.1)
+  - Reindeers (2.2.0)
   - RxCocoa (5.1.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
   - RxSwift (5.1.1)
+  - SwiftIconFont (6.1.1)
   - SwiftLazy (1.1.9)
 
 DEPENDENCIES:
+  - DateToolsSwift
   - DeclarativeTVC
   - DITranquillity
   - Dodo
   - DTTextField
+  - FantasticSnowflake
   - IHKeyboardAvoiding
-  - LGButton
+  - Kingfisher
+  - LGButton (from `https://github.com/ziryanov/LGButton.git`)
   - LTHRadioButton
   - Moya/RxSwift
   - NVActivityIndicatorView
   - Parchment
   - RxCocoa
   - RxSwift
+  - SwiftIconFont
 
 SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - DateToolsSwift
+    - FantasticSnowflake
+    - Kingfisher
+    - Reindeers
+    - SwiftIconFont
   trunk:
     - Alamofire
     - DeclarativeTVC
@@ -55,7 +72,6 @@ SPEC REPOS:
     - Dodo
     - DTTextField
     - IHKeyboardAvoiding
-    - LGButton
     - LTHRadioButton
     - Moya
     - NVActivityIndicatorView
@@ -65,24 +81,38 @@ SPEC REPOS:
     - RxSwift
     - SwiftLazy
 
+EXTERNAL SOURCES:
+  LGButton:
+    :git: https://github.com/ziryanov/LGButton.git
+
+CHECKOUT OPTIONS:
+  LGButton:
+    :commit: 3a9e998faec6813e002e45205ad08099e0dee716
+    :git: https://github.com/ziryanov/LGButton.git
+
 SPEC CHECKSUMS:
   Alamofire: e447a2774a40c996748296fa2c55112fdbbc42f9
+  DateToolsSwift: 4207ada6ad615d8dc076323d27037c94916dbfa6
   DeclarativeTVC: a2a9961cac6f3e0f5f9f18a96a484c7033e593c7
   DifferenceKit: 516f12e336ed65a3a0665847b5c3cb5cad4bd4ea
   DITranquillity: f03d76911e8b63df0a4d393932de9a9a415938e7
   Dodo: e13a732c6f95b48fbf7001d483c0f4ee967a78dd
   DTTextField: 4b9bab01faec50a98d42d24ba39ed122461f866f
+  FantasticSnowflake: 333f4bc4165066de717a711be9b6bde95831853a
   IHKeyboardAvoiding: 4cae0880c3975feffa278495df894c5166e71ad0
-  LGButton: 9f0a7f9d3030e3f504108342f6b66d64a429371b
+  Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
+  LGButton: fb15cd097d469401f5d2eb332ce5bc09dc457679
   LTHRadioButton: b20980614572f7911272a6b8aa79ec0fdc9a74d4
   Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
   NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
   Parchment: 466a1cfb6151780db8acb4bbedc2d9c6bfa1e2ff
+  Reindeers: 0c781130bc9088550c70d02a1caf3e328a4b1126
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SwiftIconFont: 0a772c5ac65a40c9b0675efa37b4928158bd8e43
   SwiftLazy: 1657354f43dbd6a0a79e00ad67558d655c77bdc9
 
-PODFILE CHECKSUM: 780afed7b6e6945e5fe563710aed1cd444098c44
+PODFILE CHECKSUM: 041ab1dc50675e366330a08bc4c18c7839f321d3
 
 COCOAPODS: 1.10.1

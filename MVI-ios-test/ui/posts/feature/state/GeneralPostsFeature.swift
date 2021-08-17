@@ -9,7 +9,7 @@ import Foundation
 
 final class PostsGeneralFeature: PostsBaseFeature<GeneralPostsState, PostsGeneralFeature.Requester> {
     
-    init(containerFeature: PostsContainerFeature, network: Network, requester: Requester) {
+    init(containerFeature: PostsContainerFeature, network: Network) {
         super.init(state: .init(), containerFeature: containerFeature, requester: Requester(network: network))
     }
     

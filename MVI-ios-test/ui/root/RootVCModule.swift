@@ -9,39 +9,26 @@ import Foundation
 import DITranquillity
 
 enum RootVCModule {
-
     typealias ViewController = RootVC
-    
-    enum Props {
-        case loading
-        case rootScreen(Router)
-    }
+    typealias Props = Void
 
-    final class Presenter: PresenterBase<ViewController, SessionFeature> {
+    final class Presenter: PresenterBase<ViewController, RouterFeature> {
         override func createView() -> ViewController {
-            return RootVC.controllerFromStoryboard()
+            return ViewController.controllerFromStoryboard()
         }
         
-        override func props(for state: State) -> Props {
-            switch state {
-            case .waitingAuth:
-                return .rootScreen(Router(screen: .auth))
-            case .signedIn:
-                return .rootScreen(Router(screen: .mainTabs))
-            default:
-                return .loading
-            }
-        }
-        
-        override func actions(for state: PresenterBase<RootVCModule.ViewController, SessionFeature>.State) -> () { () }
+        override func props(for state: State) -> Props { () }
+        override func actions(for state: State) -> ViewController.Actions { () }
     }
     
     final class DI: DIPart {
         static func load(container: DIContainer) {
             container.register (SessionFeature.init)
-                .lifetime(.single)
+                .lifetime(.perRun(.strong))
+            container.register (RouterFeature.init)
+                .lifetime(.perRun(.strong))
             container.register (Presenter.init)
-                .lifetime(.single)
+                .lifetime(.perRun(.strong))
         }
     }
 }

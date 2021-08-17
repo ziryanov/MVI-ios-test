@@ -8,10 +8,12 @@
 import UIKit
 
 struct Router {
-    enum Screen {
+    enum Screen: Equatable {
         case root
         case auth
         case mainTabs
+        case generalPosts
+        case posts(source: Posts2StepSource)
     }
 
     let screen: Screen
@@ -28,7 +30,14 @@ struct Router {
             let presenter: AuthVCModule.Presenter = container.resolve()
             return presenter.view
         case .mainTabs:
-            fatalError()
+            return MainTabsVC.controllerFromStoryboard()
+        case .generalPosts:
+            let presenter: PostsVCModule.PresenterGeneral = container.resolve()
+            return presenter.view
+        case .posts(let source):
+            container.extensions(for: Post2StepFeature.self)?.setArgs(source)
+            let presenter: PostsVCModule.Presenter2Step = container.resolve()
+            return presenter.view
         }
     }
 }

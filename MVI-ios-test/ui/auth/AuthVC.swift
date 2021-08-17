@@ -10,8 +10,8 @@ import Dodo
 import IHKeyboardAvoiding
 import DTTextField
 import LTHRadioButton
-import LGButton
 import RxCocoa
+import LGButton
 
 final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
     typealias Consumable = AuthFeature.News
@@ -45,7 +45,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
         bottomPanel.contentOffset = startOffset
         
         requestButton.leftIconFontName = "fa"
-        requestButton.leftIconString = FontAwesome.sign_in
+        requestButton.leftIconString = "sign-in"
 
         KeyboardAvoiding.avoidingView = view.subviews.first
 
@@ -56,7 +56,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
         bottomPanel.canCancelContentTouches = false
     }
 
-    func accept(_ t: AuthFeature.News) {
+    func accept(_ t: Consumable) {
         switch t {
         case .requestFailed(let error):
             switch error {
@@ -106,8 +106,8 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
 
             self.bottomPanel.setContentOffset(CGPoint(x: CGFloat(self.segment.selectedSegmentIndex) * self.bottomPanel.frame.width, y: 0), animated: self.bottomPanel.contentOffset != self.startOffset)
             
-            self.requestButton.titleString = segmentName(for: $0)
-            self.requestButton.loadingString = buttonLoadingName(for: $0)
+            self.requestButton.titleString = self.segmentName(for: $0)
+            self.requestButton.loadingString = self.buttonLoadingName(for: $0)
         }
         
         MW.Watch(\AuthVCModule.Props.accept) { [unowned self] in
