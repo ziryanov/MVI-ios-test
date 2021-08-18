@@ -74,13 +74,11 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
         }
     }
     
-    typealias MW = ModelWatcher<AuthVCModule.Props>
-    
-    @ModelWatcherBuilder<AuthVCModule.Props> var modelWatcher: MW {
-        MW.Watch(\AuthVCModule.Props.identifier) { [unowned self] in
+    @ModelWatcherBuilder var modelWatcher: ModelWatcher<AuthVCModule.Props> {
+        Watch(\AuthVCModule.Props.identifier) { [unowned self] in
             self.identifier.text = $0
         }
-        MW.Watch(\AuthVCModule.Props.identifierError) { [unowned self] in
+        Watch(\AuthVCModule.Props.identifierError) { [unowned self] in
             if let error = $0 {
                 self.identifier.showError(message: error)
             } else {
@@ -88,37 +86,37 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
             }
         }
         
-        MW.Watch(\AuthVCModule.Props.password) { [unowned self] in
+        Watch(\AuthVCModule.Props.password) { [unowned self] in
             self.password.text = $0
         }
-        MW.Watch(\AuthVCModule.Props.passwordError) { [unowned self] in
+        Watch(\AuthVCModule.Props.passwordError) { [unowned self] in
             if let error = $0 {
                 self.password.showError(message: error)
             } else {
                 self.password.hideError()
             }
         }
-        
-        MW.Watch(\AuthVCModule.Props.currentSegment) { [unowned self] in
+
+        Watch(\AuthVCModule.Props.currentSegment) { [unowned self] in
             if let i = self.segmentIndexes.firstIndex(of: $0) {
                 self.segment.selectedSegmentIndex = i
             }
 
             self.bottomPanel.setContentOffset(CGPoint(x: CGFloat(self.segment.selectedSegmentIndex) * self.bottomPanel.frame.width, y: 0), animated: self.bottomPanel.contentOffset != self.startOffset)
-            
+
             self.requestButton.titleString = self.segmentName(for: $0)
             self.requestButton.loadingString = self.buttonLoadingName(for: $0)
         }
-        
-        MW.Watch(\AuthVCModule.Props.accept) { [unowned self] in
+
+        Watch(\AuthVCModule.Props.accept) { [unowned self] in
             if $0 {
                 acceptPolicy.select(animated: true)
             } else {
                 acceptPolicy.deselect(animated: true)
             }
         }
-        
-        MW.Watch(\AuthVCModule.Props.buttonLoading) { [unowned self] in
+
+        Watch(\AuthVCModule.Props.buttonLoading) { [unowned self] in
             self.requestButton.isLoading = $0
         }
     }
