@@ -43,8 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let bounds = UIScreen.main.bounds
         window = UIWindow(frame: bounds)
-        let presenter: RootVCModule.Presenter = container.resolve()
-        window?.rootViewController = presenter.view
+        window?.rootViewController = Router(screen: .root).craeteViewController()
         window?.makeKeyAndVisible()
     }
 }

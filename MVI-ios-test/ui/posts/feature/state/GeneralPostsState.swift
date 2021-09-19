@@ -15,7 +15,7 @@ struct GeneralPostsState: PostsStateProtocol {
     
     var hasMoreModels = false
     var loadMoreEnabled: Bool {
-        guard currentState == .loaded(error: nil) else { return false }
+        guard currentState == .loaded else { return false }
         return hasMoreModels
     }
 }

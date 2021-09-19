@@ -8,9 +8,9 @@
 import Foundation
 
 enum Posts2StepSource: Equatable {
-    case general
+    case feed
     case interesting
-    case notInteresting
+    case firstTwo
 }
 
 struct Posts2StepState: PostsStateProtocol {
@@ -23,7 +23,7 @@ struct Posts2StepState: PostsStateProtocol {
     var loaded = [PostsContainer.Model]()
     
     var loadMoreEnabled: Bool {
-        guard let allIds = allIds, currentState == .loaded(error: nil), !loaded.isEmpty else { return false }
-        return loaded.count < allIds.count
+        guard let allIds = allIds, currentState == .loaded, !loaded.isEmpty else { return false }
+        return loaded.last?.id != allIds.last
     }
 }

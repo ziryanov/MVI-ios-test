@@ -33,11 +33,11 @@ final class Post2StepFeature: PostsBaseFeature<Posts2StepState, Post2StepFeature
         private func requestIds(state: State) -> Single<[PostsContainer.ModelId]> {
             let token: API
             switch state.source {
-            case .general:
+            case .feed:
                 token = .getFeedIds
             case .interesting:
                 token = .getInterestingIds
-            case .notInteresting:
+            case .firstTwo:
                 token = .getFirstTwo
             }
             

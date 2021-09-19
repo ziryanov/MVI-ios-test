@@ -10,44 +10,11 @@ import CoreGraphics
 
 enum TableListState: Equatable {
     case initialLoading
-    case loaded(error: String?)
+    case loaded
+    case failed(String)
     case refreshing
-    case loadingMore
+    case loadingMore(UUID)
 }
-
-extension TableListState {
-//    var initialLoading: Bool {
-//        if case .initialLoading = self {
-//            return true
-//        }
-//        return false
-//    }
-//    
-//    var refreshing: Bool {
-//        if case .refreshing = self {
-//            return true
-//        }
-//        return false
-//    }
-//    
-    var isLoaded: Bool {
-        if case .loaded = self {
-            return true
-        }
-        return false
-    }
-}
-
-protocol HasTableListState {
-    var currentState: TableListState { get set }
-}
-
-
-struct ImageWithRatio: Hashable, Equatable {
-    let image: String
-    let ratio: CGFloat
-}
-
 
 enum SingleModelState {
     case loading
@@ -61,4 +28,11 @@ extension SingleModelState {
         }
         return false
     }
+}
+
+//========================
+
+struct ImageWithRatio: Hashable, Equatable {
+    let image: String
+    let ratio: CGFloat
 }

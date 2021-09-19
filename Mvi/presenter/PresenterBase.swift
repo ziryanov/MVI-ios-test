@@ -13,27 +13,37 @@ public protocol PresenterProtocol {
     func unsubscribe()
 }
 
-open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & AnyObject, PresenterFeature: FeatureProtocol>: PresenterProtocol where View.Consumable == PresenterFeature.News {
+open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & PresenterHolder & AnyObject, PresenterFeature: FeatureProtocol>: PresenterProtocol where View.Consumable == PresenterFeature.News {
 
     public typealias State = PresenterFeature.Element
 
-    weak var view: View!
-    let feature: PresenterFeature
+    public let feature: PresenterFeature
+    
+    public static func createAndReturnView(with feature: PresenterFeature) -> View {
+        let presenter = self.init(feature: feature)
+        return presenter.createVC()
+    }
 
     private let disposeBag = DisposeBag()
-    init(feature: PresenterFeature) {
+    required public init(feature: PresenterFeature) {
         self.feature = feature
-        self.view = createView()
-        if let view = self.view as? HasPresenter {
-            view.presenter = self
-        }
-        
+    }
+    
+    internal weak var view: View!
+    
+    private func createVC() -> View {
+        var view = _createView()
+        view._presenter = self
+        self.view = view
+
         feature.news
             .observeOn(MainScheduler.instance)
-            .subscribe(onNext: { [weak view] in
-                view?.accept($0)
+            .subscribe(onNext: { [weak self] in
+                self?.view?.accept($0)
             })
             .disposed(by: disposeBag)
+        
+        return view
     }
 
     private var subscribeDB = DisposeBag()
@@ -47,7 +57,6 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & AnyO
             .subscribe(onNext: { [unowned self] in
                 self.render($0)
             })
-
             .disposed(by: subscribeDB)
     }
 
@@ -57,23 +66,30 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & AnyO
 
     private var actionsApplied = false
     private func render(_ state: State) {
-        view.render(props: props(for: state))
+        view.render(props: _props(for: state))
         if !actionsApplied {
-            view.apply(actions: actions(for: state))
+            view.apply(actions: _actions(for: state))
             actionsApplied = true
         }
     }
 
     //to override
-    open func props(for state: State) -> View.Props {
+    open func _props(for state: State) -> View.Props {
         fatalError("need implement")
     }
 
-    open func actions(for state: State) -> View.Actions {
+    open func _actions(for state: State) -> View.Actions {
         fatalError("need implement")
     }
 
-    open func createView() -> View {
+    open func _createView() -> View {
         fatalError("need implement")
+    }
+}
+
+import UIKit
+extension PresenterBase where View: UIViewController {
+    public var viewController: UIViewController? {
+        return view
     }
 }

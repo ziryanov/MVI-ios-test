@@ -9,23 +9,21 @@ import Foundation
 
 struct UsersContainer: ModelsContainerProtocol {
     typealias Model = User
-    
-    var models = [Int: User]()
-    
+
     struct BasicUserInfo: Equatable, Hashable {
         var id: ModelId
         var avatar: String?
         var username: String
     }
     
-    struct User: ModelWithId {
+    struct User: ModelWithId, Equatable, Hashable {
         typealias ModelId = Int
         var id: ModelId {
             basic.id
         }
         var basic: BasicUserInfo
         
-        enum Online {
+        enum Online: Equatable, Hashable {
             case online
             case was(TimeInterval)
             

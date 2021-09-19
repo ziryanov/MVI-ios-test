@@ -38,11 +38,11 @@ enum AuthVCModule {
 
     final class Presenter: PresenterBase<ViewController, AuthFeature> {
         
-        override func createView() -> ViewController {
+        override func _createView() -> ViewController {
             return ViewController.controllerFromStoryboard()
         }
         
-        override func props(for state: State) -> Props {
+        override func _props(for state: State) -> Props {
             Props(identifier: state.identifier.value,
                   identifierError: state.identifier.validationError,
                   password: state.password.value,
@@ -52,7 +52,7 @@ enum AuthVCModule {
                   buttonLoading: state.requestInProgress)
         }
         
-        override func actions(for state: State) -> Actions {
+        override func _actions(for state: State) -> Actions {
             Actions(changeSegment: .init { [unowned feature] in
                 feature.accept(.changeSignInOrSignUp($0))
             },
@@ -79,8 +79,6 @@ enum AuthVCModule {
             container.register (AuthCredentialsValidator.init)
                 .lifetime(.objectGraph)
             container.register (AuthFeature.init)
-                .lifetime(.objectGraph)
-            container.register (Presenter.init)
                 .lifetime(.objectGraph)
         }
     }

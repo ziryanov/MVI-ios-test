@@ -13,9 +13,7 @@ import LTHRadioButton
 import RxCocoa
 import LGButton
 
-final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
-    typealias Consumable = AuthFeature.News
-    
+final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.News> {    
     public class override var storyboardName: String {
         return "Auth"
     }
@@ -56,7 +54,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
         bottomPanel.canCancelContentTouches = false
     }
 
-    func accept(_ t: Consumable) {
+    override func accept(_ t: Consumable) {
         switch t {
         case .requestFailed(let error):
             switch error {
@@ -85,7 +83,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
                 self.identifier.hideError()
             }
         }
-        
+
         Watch(\AuthVCModule.Props.password) { [unowned self] in
             self.password.text = $0
         }
@@ -110,9 +108,9 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
 
         Watch(\AuthVCModule.Props.accept) { [unowned self] in
             if $0 {
-                acceptPolicy.select(animated: true)
+                self.acceptPolicy.select(animated: true)
             } else {
-                acceptPolicy.deselect(animated: true)
+                self.acceptPolicy.deselect(animated: true)
             }
         }
 
@@ -144,7 +142,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
             }
             .disposed(by: rx.disposeBag(tag: "identifierEnd"))
         identifier.rx.controlEvent(.editingChanged)
-            .bind { [action = actions.changeValue] in
+            .bind { [unowned self, action = actions.changeValue] in
                 action.perform(with: (.identifier, self.identifier.text))
             }
             .disposed(by: rx.disposeBag(tag: "identifierChanged"))
@@ -160,7 +158,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
             }
             .disposed(by: rx.disposeBag(tag: "passwordEnd"))
         password.rx.controlEvent(.editingChanged)
-            .bind { [action = actions.changeValue] in
+            .bind { [unowned self, action = actions.changeValue] in
                 action.perform(with: (.password, self.password.text))
             }
             .disposed(by: rx.disposeBag(tag: "passwordChanged"))
@@ -177,7 +175,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions>, Consumer {
                 action.perform()
             }
             .disposed(by: rx.disposeBag(tag: "requestButton"))
-        
+
         debugActions = actions
     }
 

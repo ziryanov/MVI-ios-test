@@ -14,6 +14,8 @@ final class PostsContainerFeature: ModelsContainerFeature<PostsContainer> {
         static func load(container: DIContainer) {
             container.register { PostsContainerFeature.init(initialState: PostsContainer()) }
                 .lifetime(.single)
+            container.register(LikingPostFeature.init)
+                .lifetime(.single)
         }
     }
 }

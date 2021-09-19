@@ -25,10 +25,33 @@ extension Completable {
 }
 
 extension Maybe {
-    static func just(_ elem: Element, if block: @escaping () -> Bool) -> Maybe<Element> {
+    static func just(_ elem: Element, if block: @autoclosure @escaping () -> Bool) -> Maybe<Element> {
         return Maybe<Element>.create { observer in
             if block() {
                 observer(.success(elem))
+            } else {
+                observer(.completed)
+            }
+            return Disposables.create()
+        }
+    }
+}
+
+extension Observable {
+    static func createSimple(_ block: @escaping () -> Element) -> Observable<Element> {
+        return Observable<Element>.create { observer in
+            observer.onNext(block())
+            observer.onCompleted()
+            return Disposables.create()
+        }
+    }
+}
+
+extension Maybe {
+    static func createSimple(_ block: @escaping () -> Element?) -> Maybe<Element> {
+        return Maybe<Element>.create { observer in
+            if let value = block() {
+                observer(.success(value))
             } else {
                 observer(.completed)
             }

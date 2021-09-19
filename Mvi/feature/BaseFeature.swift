@@ -43,7 +43,7 @@ public protocol InnerFeatureProtocol {
 
 extension InnerFeatureProtocol where Self: Any {
     func bootstrapper() -> Observable<Action> {
-        .never()
+        .empty()
     }
     
     func news(from action: Action, effect: Effect, state: State) -> News? {
@@ -65,6 +65,10 @@ extension InnerFeatureProtocol where Effect == Action {
     func actor<Holder: StateHolder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder.State == State {
         .just(action)
     }
+}
+
+extension InnerFeatureProtocol where State == Void {
+    func reduce(with effect: State, state: inout State) { }
 }
 
 open class BaseFeature<Wish, State, News, InnerPart: InnerFeatureProtocol>: FeatureProtocol where InnerPart.Wish == Wish, InnerPart.State == State, InnerPart.News == News {

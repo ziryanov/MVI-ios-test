@@ -10,8 +10,6 @@ import CoreGraphics
 
 struct PostsContainer: ModelsContainerProtocol {
     typealias Model = Post
-    
-    var models = [Int: Post]()
 
     struct Post: ModelWithId, Hashable, Equatable {
         typealias ModelId = Int

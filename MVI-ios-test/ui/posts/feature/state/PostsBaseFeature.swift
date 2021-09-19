@@ -12,7 +12,7 @@ enum TableViewWish {
 }
 
 struct PostsLoadingFinishedNews {
-    let models: [PostsContainer.Model]
+    let loadedModels: [PostsContainer.Model]
 }
 
 protocol PostsRequesterRefreshResultProtocol {
@@ -34,23 +34,25 @@ protocol PostsRequester {
 
 class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>: BaseFeature<TableViewWish, PostState, PostsLoadingFinishedNews, PostsBaseFeature.InnerPart> where Requester.State == PostState {
     
-    init(state: PostState, containerFeature: PostsContainerFeature, requester: Requester) {
-        let innerPart = InnerPart(containerFeature: containerFeature, requester: requester)
+    init(state: PostState, containerFeature: PostsContainerFeature?, requester: Requester) {
+        let innerPart = InnerPart(postsUpdates: containerFeature?.news ?? .empty(), requester: requester)
         super.init(initialState: state, innerPart: innerPart)
         
-        news
-            .subscribe(onNext: {
-                containerFeature.accept(.init(updated: $0.models, updater: innerPart))
-            })
-            .disposed(by: disposeBag)
+        if containerFeature != nil {
+            news
+                .subscribe(onNext: { [weak containerFeature] in
+                    containerFeature?.accept(.init(updated: $0.loadedModels, updater: innerPart))
+                })
+                .disposed(by: disposeBag)
+        }
     }
     
     class InnerPart: InnerFeatureProtocol {
         private let requester: Requester
-        private let containerFeature: PostsContainerFeature
+        private let postsUpdates: Observable<PostsContainerFeature.News>
         private weak var skipUpdatedFrom: AnyObject?
-        fileprivate init(containerFeature: PostsContainerFeature, requester: Requester) {
-            self.containerFeature = containerFeature
+        fileprivate init(postsUpdates: Observable<PostsContainerFeature.News>, requester: Requester) {
+            self.postsUpdates = postsUpdates
             self.requester = requester
         }
         
@@ -60,9 +62,9 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
             case startRefreshRequest
 
             case loadMore
-            case startLoadMoreRequest
+            case startLoadMoreRequest(UUID)
 
-            case updateModels([PostsContainer.Model])
+            case updateModels([PostsContainer.ModelId: PostsContainer.Model])
         }
         typealias State = PostState
         enum Effect {
@@ -70,20 +72,21 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
             case finishRefresh(Requester.RefreshResult)
             case refreshFailed(String)
             
-            case startLoadMore
+            case startLoadMore(UUID)
             case finishLoadMore([PostsContainer.Model])
-            case loadMoreFailed(String)
             
             case updateLoaded([PostsContainer.Model])
         }
         typealias News = PostsLoadingFinishedNews
         
         func bootstrapper() -> Observable<Action> {
-            Observable.just(Action.startRefreshRequest)
-                .concat(containerFeature.news
-                            .skipWhile { [weak self] in $0.updater === self }
-                            .map { Action.updateModels($0.updated) }
-                )
+            let array: [Observable<Action>] = [
+                Observable.just(Action.startRefreshRequest),
+                postsUpdates
+                    .skipWhile { [weak self] in $0.updater === self }
+                    .map { Action.updateModels($0.updated) }
+            ]
+            return Observable.merge(array)
         }
         
         func action(from wish: Wish) -> Action {
@@ -96,50 +99,44 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
         }
 
         func actor<Holder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder : StateHolder, State == Holder.State {
-            let currentState = stateHolder.state
             switch action {
             case .refresh:
                 return Maybe<Effect>
-                    .just(.startRefresh, if: { [weak stateHolder] in
-                        return stateHolder?.state.currentState != .initialLoading && stateHolder?.state.currentState != .refreshing
-                    })
+                    .just(.startRefresh, if: stateHolder.state.currentState != .initialLoading && stateHolder.state.currentState != .refreshing)
                     .asObservable()
             case .startRefreshRequest:
                 return requester
-                    .refresh(state: currentState, perPage: perPage)
+                    .refresh(state: stateHolder.state, perPage: perPage)
                     .map { Effect.finishRefresh($0) }
-                    .asObservable()
                     .catchError { _ in .just(Effect.refreshFailed("refresh failed")) }
+                    .asObservable()
             case .loadMore:
                 return Maybe<Effect>
-                    .just(.startLoadMore, if: { [weak stateHolder] in
-                        stateHolder?.state.currentState.isLoaded == true
-                    })
+                    .just(.startLoadMore(UUID()), if: stateHolder.state.currentState == .loaded)
                     .asObservable()
-            case .startLoadMoreRequest:
+            case .startLoadMoreRequest(let uuid):
                 return requester
-                    .loadMore(state: currentState, perPage: perPage)
-                    .map { Effect.finishLoadMore($0) }
-                    .catchError { _ in .just(Effect.loadMoreFailed("load more failed")) }
-                    .asObservable()
-            case .updateModels(let models):
-                return Maybe<Effect>
-                    .create { observer in
-                        let needUpdateIds = Set(models.map { $0.id }).intersection(stateHolder.state.loaded.map { $0.id })
-                        if needUpdateIds.isEmpty {
-                            observer(.completed)
-                        } else {
-                            let needUpdateFromArray = models.filter { needUpdateIds.contains($0.id) }
-                            let updateFrom = Dictionary(needUpdateFromArray.map { ($0.id, $0) }, uniquingKeysWith: { f, _ in f })
-                            var loaded = stateHolder.state.loaded
-                            for i in 0..<loaded.count {
-                                let id = loaded[i].id
-                                guard let updateTo = updateFrom[id] else { continue }
-                                loaded[i] = updateTo
-                            }
-                            observer(.success(.updateLoaded(loaded)))
+                    .loadMore(state: stateHolder.state, perPage: perPage)
+                    .map { [weak stateHolder] in
+                        guard case .loadingMore(let currentUuid) = stateHolder?.state.currentState, currentUuid == uuid else {
+                            throw ApiError(reason: .cancelled)
                         }
-                        return Disposables.create()
+                        return Effect.finishLoadMore($0)
+                    }
+                    .catchError { _ in .just(Effect.finishLoadMore([])) }
+                    .asObservable()
+            case .updateModels(let modelsDict):
+                return Maybe<Effect>
+                    .createSimple {
+                        let needUpdateIds = Set(modelsDict.keys).intersection(stateHolder.state.loaded.map { $0.id })
+                        guard !needUpdateIds.isEmpty else { return nil }
+                        var loaded = stateHolder.state.loaded
+                        for i in 0..<loaded.count {
+                            let id = loaded[i].id
+                            guard let updateTo = modelsDict[id] else { continue }
+                            loaded[i] = updateTo
+                        }
+                        return .updateLoaded(loaded)
                     }
                     .asObservable()
             }
@@ -150,19 +147,17 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
             case .startRefresh:
                 state.currentState = .refreshing
             case .finishRefresh(let result):
-                state.currentState = .loaded(error: nil)
+                state.currentState = .loaded
                 state.loaded = result.loaded
                 requester.updateStateAfterSuccessRefresh(state: &state, result: result)
             case .refreshFailed(let text):
-                state.currentState = .loaded(error: text)
-            case .startLoadMore:
-                state.currentState = .loadingMore
+                state.currentState = .failed(text)
+            case .startLoadMore(let uuid):
+                state.currentState = .loadingMore(uuid)
             case .finishLoadMore(let models):
-                state.currentState = .loaded(error: nil)
+                state.currentState = .loaded
                 state.loaded += models
                 requester.updateStateAfterSuccessLoadMore(state: &state, result: models)
-            case .loadMoreFailed(let text):
-                state.currentState = .loaded(error: text)
             case .updateLoaded(let models):
                 state.loaded = models
             }
@@ -171,9 +166,9 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
         func news(from action: Wish, effect: Effect, state: State) -> News? {
             switch effect {
             case .finishRefresh(let result):
-                return PostsLoadingFinishedNews(models: result.loaded)
+                return PostsLoadingFinishedNews(loadedModels: result.loaded)
             case .finishLoadMore(let models):
-                return PostsLoadingFinishedNews(models: models)
+                return PostsLoadingFinishedNews(loadedModels: models)
             default:
                 return nil
             }
@@ -184,8 +179,8 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
                 switch state.currentState {
                 case .initialLoading, .refreshing:
                     return .startRefreshRequest
-                case .loadingMore:
-                    return .startLoadMoreRequest
+                case .loadingMore(let uuid):
+                    return .startLoadMoreRequest(uuid)
                 default:
                     break
                 }

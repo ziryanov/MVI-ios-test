@@ -78,8 +78,6 @@
 		619ECF3B26A6D78600D37B86 /* MockServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF3726A6D78600D37B86 /* MockServer.swift */; };
 		619ECF3C26A6D78600D37B86 /* Mapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF3826A6D78600D37B86 /* Mapping.swift */; };
 		619ECF3D26A6D78600D37B86 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF3926A6D78600D37B86 /* API.swift */; };
-		619ECF5226A6DDB100D37B86 /* LikingPostQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF4C26A6DDB100D37B86 /* LikingPostQueue.swift */; };
-		619ECF5326A6DDB100D37B86 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF4D26A6DDB100D37B86 /* State.swift */; };
 		619ECF5426A6DDB100D37B86 /* UsersContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF4F26A6DDB100D37B86 /* UsersContainer.swift */; };
 		619ECF5626A6DDB100D37B86 /* PostsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF5126A6DDB100D37B86 /* PostsContainer.swift */; };
 		619ECF5C26A6DFA000D37B86 /* Struct+safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF5B26A6DFA000D37B86 /* Struct+safe.swift */; };
@@ -87,6 +85,18 @@
 		619ECF6826A6E20200D37B86 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF6426A6E20200D37B86 /* SessionState.swift */; };
 		619ECF7326A6E24300D37B86 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF7226A6E24300D37B86 /* UserDefault.swift */; };
 		619ECF7826A6E2A000D37B86 /* SessionFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF7726A6E2A000D37B86 /* SessionFeature.swift */; };
+		61AAAD5726F3770D0076ED38 /* LikingPostFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD5626F3770D0076ED38 /* LikingPostFeature.swift */; };
+		61AAAD6026F48F9C0076ED38 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD5F26F48F9C0076ED38 /* UserState.swift */; };
+		61AAAD6226F4908D0076ED38 /* UserFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD6126F4908D0076ED38 /* UserFeature.swift */; };
+		61AAAD6426F5DEFB0076ED38 /* UserVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD6326F5DEFB0076ED38 /* UserVC.swift */; };
+		61AAAD6626F5DF070076ED38 /* UserVCModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD6526F5DF070076ED38 /* UserVCModule.swift */; };
+		61AAAD6826F5E33D0076ED38 /* User.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61AAAD6726F5E33D0076ED38 /* User.storyboard */; };
+		61AAAD6C26F5F60D0076ED38 /* AFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD6B26F5F60D0076ED38 /* AFeature.swift */; };
+		61AAAD6E26F5FC6A0076ED38 /* Easy.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 61AAAD6D26F5FC6A0076ED38 /* Easy.storyboard */; };
+		61AAAD7626F71CCB0076ED38 /* UserFollowersTitleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD7126F71CCA0076ED38 /* UserFollowersTitleCell.swift */; };
+		61AAAD7726F71CCB0076ED38 /* UserFollowersCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD7226F71CCA0076ED38 /* UserFollowersCell.swift */; };
+		61AAAD7826F71CCB0076ED38 /* UserFollowersFollowerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD7326F71CCB0076ED38 /* UserFollowersFollowerCell.swift */; };
+		61AAAD7926F71CCB0076ED38 /* UserHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD7426F71CCB0076ED38 /* UserHeaderCell.swift */; };
 		61C6E45826B31267002D695B /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C6E45726B31267002D695B /* AuthState.swift */; };
 		61C6E45D26B31320002D695B /* AuthFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C6E45C26B31320002D695B /* AuthFeature.swift */; };
 		61C6E46726B560E3002D695B /* AuthCredentialsValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C6E46626B560E3002D695B /* AuthCredentialsValidator.swift */; };
@@ -201,8 +211,6 @@
 		619ECF3726A6D78600D37B86 /* MockServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockServer.swift; sourceTree = "<group>"; };
 		619ECF3826A6D78600D37B86 /* Mapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mapping.swift; sourceTree = "<group>"; };
 		619ECF3926A6D78600D37B86 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
-		619ECF4C26A6DDB100D37B86 /* LikingPostQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LikingPostQueue.swift; sourceTree = "<group>"; };
-		619ECF4D26A6DDB100D37B86 /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		619ECF4F26A6DDB100D37B86 /* UsersContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UsersContainer.swift; sourceTree = "<group>"; };
 		619ECF5126A6DDB100D37B86 /* PostsContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostsContainer.swift; sourceTree = "<group>"; };
 		619ECF5B26A6DFA000D37B86 /* Struct+safe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Struct+safe.swift"; sourceTree = "<group>"; };
@@ -210,6 +218,18 @@
 		619ECF6426A6E20200D37B86 /* SessionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		619ECF7226A6E24300D37B86 /* UserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		619ECF7726A6E2A000D37B86 /* SessionFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFeature.swift; sourceTree = "<group>"; };
+		61AAAD5626F3770D0076ED38 /* LikingPostFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikingPostFeature.swift; sourceTree = "<group>"; };
+		61AAAD5F26F48F9C0076ED38 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
+		61AAAD6126F4908D0076ED38 /* UserFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFeature.swift; sourceTree = "<group>"; };
+		61AAAD6326F5DEFB0076ED38 /* UserVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVC.swift; sourceTree = "<group>"; };
+		61AAAD6526F5DF070076ED38 /* UserVCModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserVCModule.swift; sourceTree = "<group>"; };
+		61AAAD6726F5E33D0076ED38 /* User.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = User.storyboard; sourceTree = "<group>"; };
+		61AAAD6B26F5F60D0076ED38 /* AFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AFeature.swift; sourceTree = "<group>"; };
+		61AAAD6D26F5FC6A0076ED38 /* Easy.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Easy.storyboard; sourceTree = "<group>"; };
+		61AAAD7126F71CCA0076ED38 /* UserFollowersTitleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFollowersTitleCell.swift; sourceTree = "<group>"; };
+		61AAAD7226F71CCA0076ED38 /* UserFollowersCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFollowersCell.swift; sourceTree = "<group>"; };
+		61AAAD7326F71CCB0076ED38 /* UserFollowersFollowerCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFollowersFollowerCell.swift; sourceTree = "<group>"; };
+		61AAAD7426F71CCB0076ED38 /* UserHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCell.swift; sourceTree = "<group>"; };
 		61C6E45726B31267002D695B /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		61C6E45C26B31320002D695B /* AuthFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFeature.swift; sourceTree = "<group>"; };
 		61C6E46626B560E3002D695B /* AuthCredentialsValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthCredentialsValidator.swift; sourceTree = "<group>"; };
@@ -406,6 +426,7 @@
 			isa = PBXGroup;
 			children = (
 				6199E37326B69C0600FACDBD /* UI_DI.swift */,
+				61AAAD6926F5F5F20076ED38 /* veryEase */,
 				617FB84826BB0C2700E51D11 /* common */,
 				61205CF326B934F8007B93BE /* router */,
 				617FB87326BFC63500E51D11 /* mainTabs */,
@@ -469,7 +490,7 @@
 		617FB85026BBCFD300E51D11 /* user */ = {
 			isa = PBXGroup;
 			children = (
-				617FB85426BBD03F00E51D11 /* UserDTO.swift */,
+				61AAAD5C26F48C020076ED38 /* feature */,
 			);
 			path = user;
 			sourceTree = "<group>";
@@ -551,6 +572,7 @@
 			children = (
 				619ECF5126A6DDB100D37B86 /* PostsContainer.swift */,
 				617FB88A26BFD31F00E51D11 /* PostsContainerFeature.swift */,
+				61AAAD5626F3770D0076ED38 /* LikingPostFeature.swift */,
 			);
 			path = posts;
 			sourceTree = "<group>";
@@ -610,8 +632,6 @@
 		619ECF4B26A6DDB100D37B86 /* State */ = {
 			isa = PBXGroup;
 			children = (
-				619ECF4C26A6DDB100D37B86 /* LikingPostQueue.swift */,
-				619ECF4D26A6DDB100D37B86 /* State.swift */,
 				617FB87F26BFC97800E51D11 /* modelsContainer */,
 			);
 			path = State;
@@ -641,6 +661,64 @@
 				61C6E47426B56311002D695B /* dto */,
 			);
 			path = session;
+			sourceTree = "<group>";
+		};
+		61AAAD5C26F48C020076ED38 /* feature */ = {
+			isa = PBXGroup;
+			children = (
+				61AAAD6F26F71CBC0076ED38 /* cells */,
+				61AAAD5D26F48C0D0076ED38 /* dto */,
+				61AAAD5E26F48C150076ED38 /* state */,
+				61AAAD6326F5DEFB0076ED38 /* UserVC.swift */,
+				61AAAD6526F5DF070076ED38 /* UserVCModule.swift */,
+				61AAAD6726F5E33D0076ED38 /* User.storyboard */,
+			);
+			path = feature;
+			sourceTree = "<group>";
+		};
+		61AAAD5D26F48C0D0076ED38 /* dto */ = {
+			isa = PBXGroup;
+			children = (
+				617FB85426BBD03F00E51D11 /* UserDTO.swift */,
+			);
+			path = dto;
+			sourceTree = "<group>";
+		};
+		61AAAD5E26F48C150076ED38 /* state */ = {
+			isa = PBXGroup;
+			children = (
+				61AAAD5F26F48F9C0076ED38 /* UserState.swift */,
+				61AAAD6126F4908D0076ED38 /* UserFeature.swift */,
+			);
+			path = state;
+			sourceTree = "<group>";
+		};
+		61AAAD6926F5F5F20076ED38 /* veryEase */ = {
+			isa = PBXGroup;
+			children = (
+				61AAAD6A26F5F6010076ED38 /* A */,
+			);
+			path = veryEase;
+			sourceTree = "<group>";
+		};
+		61AAAD6A26F5F6010076ED38 /* A */ = {
+			isa = PBXGroup;
+			children = (
+				61AAAD6B26F5F60D0076ED38 /* AFeature.swift */,
+				61AAAD6D26F5FC6A0076ED38 /* Easy.storyboard */,
+			);
+			path = A;
+			sourceTree = "<group>";
+		};
+		61AAAD6F26F71CBC0076ED38 /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				61AAAD7426F71CCB0076ED38 /* UserHeaderCell.swift */,
+				61AAAD7126F71CCA0076ED38 /* UserFollowersTitleCell.swift */,
+				61AAAD7226F71CCA0076ED38 /* UserFollowersCell.swift */,
+				61AAAD7326F71CCB0076ED38 /* UserFollowersFollowerCell.swift */,
+			);
+			path = cells;
 			sourceTree = "<group>";
 		};
 		61C6E46B26B562A3002D695B /* auth */ = {
@@ -846,7 +924,9 @@
 				6106CC7426C4247800643A6C /* SegmentedCell.xib in Resources */,
 				61DD7AC326CABF0100B56313 /* post.like.svg in Resources */,
 				6103B58B26A304CE00CD6A50 /* Assets.xcassets in Resources */,
+				61AAAD6E26F5FC6A0076ED38 /* Easy.storyboard in Resources */,
 				6106CC7726C4247800643A6C /* LoadingCell.xib in Resources */,
+				61AAAD6826F5E33D0076ED38 /* User.storyboard in Resources */,
 				6103B58926A304CB00CD6A50 /* Root.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -987,10 +1067,12 @@
 				61C6E45826B31267002D695B /* AuthState.swift in Sources */,
 				617FB87D26BFC87E00E51D11 /* GeneralPostsState.swift in Sources */,
 				61C6E46F26B562B5002D695B /* ProfileDTO.swift in Sources */,
+				61AAAD6026F48F9C0076ED38 /* UserState.swift in Sources */,
 				617FB86F26BE8F5000E51D11 /* NSObject+nameOfClass.swift in Sources */,
 				6106CC7D26C46C5B00643A6C /* MainTabsVC.swift in Sources */,
 				61205D1526B93755007B93BE /* AuthVCModule.swift in Sources */,
-				619ECF5326A6DDB100D37B86 /* State.swift in Sources */,
+				61AAAD5726F3770D0076ED38 /* LikingPostFeature.swift in Sources */,
+				61AAAD7826F71CCB0076ED38 /* UserFollowersFollowerCell.swift in Sources */,
 				617FB87C26BFC87E00E51D11 /* PostsStateProtocol.swift in Sources */,
 				6103B67926A454E900CD6A50 /* Middleware.swift in Sources */,
 				617FB87E26BFC87E00E51D11 /* Posts2StepState.swift in Sources */,
@@ -1004,24 +1086,30 @@
 				6103B68126A457AA00CD6A50 /* Connection.swift in Sources */,
 				619ECF7326A6E24300D37B86 /* UserDefault.swift in Sources */,
 				617FB88D26BFD60700E51D11 /* PostsBaseFeature.swift in Sources */,
+				61AAAD6426F5DEFB0076ED38 /* UserVC.swift in Sources */,
 				617FB88B26BFD32000E51D11 /* PostsContainerFeature.swift in Sources */,
 				617FB88626BFCE8900E51D11 /* UsersContainerFeature.swift in Sources */,
 				619ECEF426A5BF6300D37B86 /* LogingMiddleware.swift in Sources */,
+				61AAAD7926F71CCB0076ED38 /* UserHeaderCell.swift in Sources */,
 				617FB86B26BE8F1700E51D11 /* UIViewController+create.swift in Sources */,
 				61205D3326B9397A007B93BE /* UIView+shake.swift in Sources */,
 				617FB87726BFC77600E51D11 /* State+ui.swift in Sources */,
 				619ECF3C26A6D78600D37B86 /* Mapping.swift in Sources */,
+				61AAAD6C26F5F60D0076ED38 /* AFeature.swift in Sources */,
 				619ECF7826A6E2A000D37B86 /* SessionFeature.swift in Sources */,
 				6106CC6E26C41C6500643A6C /* TVC.swift in Sources */,
 				617FB84C26BB0C3B00E51D11 /* GreenButton.swift in Sources */,
 				617FB89126C027D700E51D11 /* GeneralPostsFeature.swift in Sources */,
 				619ECF6826A6E20200D37B86 /* SessionState.swift in Sources */,
+				61AAAD7726F71CCB0076ED38 /* UserFollowersCell.swift in Sources */,
 				619ECF5426A6DDB100D37B86 /* UsersContainer.swift in Sources */,
 				617FB88126BFC9C700E51D11 /* ModelsContainerProtocol.swift in Sources */,
 				6103B62F26A35F2700CD6A50 /* Optional+let.swift in Sources */,
 				619ECF3A26A6D78600D37B86 /* Network.swift in Sources */,
 				617FB87226BEA49C00E51D11 /* ModelWatcher.swift in Sources */,
 				617FB84D26BB0C3B00E51D11 /* LeftIconButton.swift in Sources */,
+				61AAAD6226F4908D0076ED38 /* UserFeature.swift in Sources */,
+				61AAAD6626F5DF070076ED38 /* UserVCModule.swift in Sources */,
 				6103B67326A44E6400CD6A50 /* Binder.swift in Sources */,
 				617FB88826BFCED400E51D11 /* ModelsContainerDI.swift in Sources */,
 				6106CC6826C4157700643A6C /* PostsVC.swift in Sources */,
@@ -1030,6 +1118,7 @@
 				61C6E47026B562B5002D695B /* CheckIdentifierAvailabilityDTO.swift in Sources */,
 				6106CC7926C45C5F00643A6C /* RouterFeature.swift in Sources */,
 				6106CC7526C4247800643A6C /* LoadingCell.swift in Sources */,
+				61AAAD7626F71CCB0076ED38 /* UserFollowersTitleCell.swift in Sources */,
 				6103B61F26A34DCA00CD6A50 /* Consumer+middleware.swift in Sources */,
 				6199E36F26B698D000FACDBD /* NetworkDI.swift in Sources */,
 				617FB84426BB054600E51D11 /* UIViewController+child.swift in Sources */,
@@ -1038,7 +1127,6 @@
 				619ECF3B26A6D78600D37B86 /* MockServer.swift in Sources */,
 				6199E38F26B69E3C00FACDBD /* UI_DI.swift in Sources */,
 				6199E3C226B7F63B00FACDBD /* RootVCModule.swift in Sources */,
-				619ECF5226A6DDB100D37B86 /* LikingPostQueue.swift in Sources */,
 				617FB85326BBD03100E51D11 /* PostDTO.swift in Sources */,
 				61205CF526B93505007B93BE /* Router.swift in Sources */,
 				6199E3BD26B6A29500FACDBD /* PropsReceiver.swift in Sources */,

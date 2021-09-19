@@ -7,12 +7,8 @@
 
 import UIKit
 
-final class PostsVC: TVC, Consumer {
+final class PostsVC: TVC<PostsLoadingFinishedNews> {
     override class var storyboardName: String {
         return "Posts"
     }
-    
-    typealias Consumable = PostsLoadingFinishedNews
-    
-    func accept(_ t: Consumable) { }
 }

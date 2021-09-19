@@ -14,7 +14,7 @@ class ModelsContainerFeature<Container: ModelsContainerProtocol>: BaseFeature<Mo
     }
     
     struct ModelsUpdatedNews {
-        let updated: [Container.Model]
+        let updated: [Container.ModelId: Container.Model]
         weak var updater: AnyObject?
     }
     
@@ -31,12 +31,11 @@ class ModelsContainerFeature<Container: ModelsContainerProtocol>: BaseFeature<Mo
         
         fileprivate init() {}
 
-        func reduce(with effect: Effect, state: inout State) {
-            state.updateModels(effect.updated)
-        }
+        func reduce(with effect: Effect, state: inout State) {}
         
         func news(from action: Action, effect: Effect, state: State) -> News? {
-            ModelsUpdatedNews(updated: effect.updated, updater: effect.updater)
+            let dict = Dictionary(effect.updated.map { ($0.id, $0) }, uniquingKeysWith: { v, _ in v })
+            return ModelsUpdatedNews(updated: dict, updater: effect.updater)
         }
     }
 }

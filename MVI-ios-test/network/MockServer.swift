@@ -62,7 +62,7 @@ final class MockServer {
     }
     private var follows: [MockFollowerDTO]
     
-    private let version = "1.7.4"
+    private let version = "1.7.8"
     
     @UserDefault("loggedUserId")
     var loggedUserId: Int?
@@ -162,7 +162,7 @@ final class MockServer {
                 return userId
             }
             var postId = 10000
-            func getPostId() -> Int {
+            func getNextPostId() -> Int {
                 postId -= 1
                 return postId
             }
@@ -191,7 +191,8 @@ final class MockServer {
             
             func generatePost(user: UserDTO) -> PostDTO {
                 let image = getImage()
-                return PostDTO(id: getPostId(), userId: user.id, avatar: user.avatar, username: user.username, date: getDate(), bodyText: getText(), bodyImage: image?.0, bodyImageRatio: image?.1, likesCount: 0, likedByMe: false, repostsCount: Int(arc4random_uniform(3)), repostedByMe: false, canComment: arc4random_uniform(5) < 4, commentsCount: Int(arc4random_uniform(3)), commentedByMe: false, viewsCount: Int(arc4random_uniform(100_000_000)), general: arc4random_uniform(10) == 1)
+                let id = getNextPostId()
+                return PostDTO(id: id, userId: user.id, avatar: user.avatar, username: user.username, date: getDate(), bodyText: "\(id) " + getText(), bodyImage: image?.0, bodyImageRatio: image?.1, likesCount: 0, likedByMe: false, repostsCount: Int(arc4random_uniform(3)), repostedByMe: false, canComment: arc4random_uniform(5) < 4, commentsCount: Int(arc4random_uniform(3)), commentedByMe: false, viewsCount: Int(arc4random_uniform(100_000_000)), general: arc4random_uniform(2) == 1)
             }
             
             func generateUser() -> UserDTO {
@@ -212,7 +213,7 @@ final class MockServer {
             
             self.registeredUser = []
             
-            let usersCount = 2
+            let usersCount = 20
             let users = (0..<usersCount).map { _ in generateUser() }
             self.users = users
             
@@ -241,8 +242,11 @@ final class MockServer {
             firstUser.followers?.append(contentsOf: otherUsers.map({ $0.basic() }).prefix(20))
             
             for user in otherUsers {
-                for post in posts {
-                    guard arc4random_uniform(25) == 1 else { continue }
+                posts[0].likesCount = posts[0].likesCount! + 1
+                user.likedPosts!.append(posts[0].id!)
+                
+                for post in posts.suffix(from: 1) {
+                    guard arc4random_uniform(5) == 1 else { continue }
                     post.likesCount = post.likesCount! + 1
                     user.likedPosts!.append(post.id!)
                 }

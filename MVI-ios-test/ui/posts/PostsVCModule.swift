@@ -13,11 +13,13 @@ enum PostsVCModule {
     typealias ViewController = PostsVC
     
     class Presenter<PostsState: PostsStateProtocol, PostsFeature: FeatureProtocol>: PresenterBase<ViewController, PostsFeature> where PostsFeature.News == ViewController.Consumable, PostsFeature.State == PostsState, PostsFeature.Consumable == TableViewWish {
-        override func createView() -> ViewController {
+        override func _createView() -> ViewController {
             return ViewController.controllerFromStoryboard()
         }
         
-        override func props(for state: State) -> ViewController.Props {
+        private let likingPostFeature: LikingPostFeature = container.resolve()
+        private let routerFeature: RouterFeature = container.resolve()
+        override func _props(for state: State) -> ViewController.Props {
             var rows = [CellAnyModel]()
 
             if state.currentState == .initialLoading {
@@ -25,12 +27,11 @@ enum PostsVCModule {
             } else {
                 rows.append(contentsOf: state.loaded.map { post in
                     PostCellVM(post: post,
-                               userPressed: Command(action: {
-//                                let userState = UserScreenState(userBase: post.userBasic)
-//                                trunk.dispatch(NavigationContainerScreen.Push(stateWrapper: stateWrapper, screen: userState))
+                               userPressed: Command(action: { [unowned routerFeature] in
+                                routerFeature.accept(.push(.user(post.userBasic)))
                                }),
-                               likePressed: Command(action: {
-//                                trunk.dispatch(PostContainer.Post.LikeDislike(postId: post.id))
+                               likePressed: Command(action: { [unowned likingPostFeature] in
+                                likingPostFeature.accept(.init(model: post))
                                }),
                                commentPressed: Command(action: {}),
                                repostPressed: Command(action: {}),
@@ -43,16 +44,16 @@ enum PostsVCModule {
             
             return TVC.Props(tableModel: TableModel(rows: rows),
                              refreshing: state.currentState == .refreshing)
-            
             }
         
-        override func actions(for state: State) -> TVC.Actions {
-            .init(refresh: Command(action: { [unowned feature] in
-                feature.accept(.refresh)
-            }),
-            loadMore: Command(action: { [unowned feature] in
-                feature.accept(.loadMore)
-            }))
+        override func _actions(for state: State) -> ViewController.Actions {
+            .init(
+                refresh: Command(action: { [unowned feature] in
+                    feature.accept(.refresh)
+                }),
+                loadMore: Command(action: { [unowned feature] in
+                    feature.accept(.loadMore)
+                }))
         }
     }
     
@@ -63,12 +64,7 @@ enum PostsVCModule {
         static func load(container: DIContainer) {
             container.register { Post2StepFeature.init(source: arg($0), containerFeature: $1, network: $2) }
                 .lifetime(.objectGraph)
-            container.register(Presenter2Step.init)
-                .lifetime(.objectGraph)
-            
             container.register(PostsGeneralFeature.init)
-                .lifetime(.objectGraph)
-            container.register(PresenterGeneral.init)
                 .lifetime(.objectGraph)
         }
     }

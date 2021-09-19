@@ -19,58 +19,52 @@ public protocol ActionsReceiver {
     func apply(actions: Actions)
 }
 
-protocol HasPresenter: AnyObject {
-    var presenter: PresenterProtocol! { get set }
+public protocol PresenterHolder {
+    var _presenter: PresenterProtocol! { get set }
 }
 
-enum PropsReceiverSubscriptionBehaviour {
+public enum PropsReceiverSubscriptionBehaviour {
     case always
     case onAppearing
 }
 
-protocol PropsReceiverWithSubscriptionBehaviour {
-    static var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour { get }
+public protocol PropsReceiverWithSubscriptionBehaviour {
+    var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour { get }
 }
 
-open class VC<Props, Actions>: UIViewController, PropsReceiver, ActionsReceiver, HasPresenter, PropsReceiverWithSubscriptionBehaviour {
-    var presenter: PresenterProtocol!
+open class VC<Props, Actions, Consumable>: UIViewController, PropsReceiver, ActionsReceiver, Consumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
+    public var _presenter: PresenterProtocol!
     
-    static var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
+    open var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
         return .onAppearing
     }
     
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        if type(of: self).subscriptionBehaviour == .always {
-            presenter.subscribe()
+        if subscriptionBehaviour == .always {
+            _presenter.subscribe()
         }
     }
     
-    override open func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if type(of: self).subscriptionBehaviour == .onAppearing {
-//        if ReduxVMSettings.logSubscribeMessages {
-//            print("subscribe presenter \(type(of: self))")
-//        }
-        
-            presenter.subscribe()
+        if subscriptionBehaviour == .onAppearing {
+            _presenter.subscribe()
         }
     }
 
-    override open func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        if type(of: self).subscriptionBehaviour == .onAppearing {
-//        if ReduxVMSettings.logSubscribeMessages {
-//            print("unsubscribe presenter \(type(of: self))")
-//        }
-            presenter.unsubscribe()
+        if subscriptionBehaviour == .onAppearing {
+            _presenter.unsubscribe()
         }
     }
     
     //to override
-    public func render(props: Props) { }
-    public func apply(actions: Actions) { }
+    open func render(props: Props) { }
+    open func apply(actions: Actions) { }
+    open func accept(_ t: Consumable) { }
 }

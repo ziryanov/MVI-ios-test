@@ -8,9 +8,7 @@
 import UIKit
 import NVActivityIndicatorView
 
-final class RootVC: VC<RootVCModule.Props, Void>, Consumer {
-    typealias Consumable = RouterFeature.News
-    
+final class RootVC: VC<RootVCModule.Props, Void, RouterFeature.News> {
     public class override var storyboardName: String {
         return "Root"
     }
@@ -26,7 +24,7 @@ final class RootVC: VC<RootVCModule.Props, Void>, Consumer {
     override func render(props: RootVCModule.Props) { }
 
     private var rootScreen: Router.Screen?
-    func accept(_ t: Consumable) {
+    override func accept(_ t: Consumable) {
         switch t {
         case .changeRoot(let router):
             activityView.stopAnimating()

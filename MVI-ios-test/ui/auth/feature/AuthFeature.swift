@@ -87,9 +87,7 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
                 switch wish {
                 case .startRequest:
                     return Maybe<Effect>
-                        .just(.applyWish(wish), if: { [weak stateHolder] in
-                            stateHolder?.state.requestInProgress == false
-                        })
+                        .just(.applyWish(wish), if: !stateHolder.state.requestInProgress)
                         .asObservable()
                 default:
                     return .just(.applyWish(wish))

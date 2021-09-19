@@ -15,7 +15,7 @@ final class NetworkDI: DIPart {
         container.register(Session.init)
             .lifetime(.single)
         
-        container.register { MoyaProvider<API>(stubClosure: MoyaProvider.delayedStub(0.2), plugins: [NetworkLoggerPlugin()]) }
+        container.register { MoyaProvider<API>(stubClosure: MoyaProvider.delayedStub(0.2), plugins: []) } //NetworkLoggerPlugin()
             .lifetime(.single)
         container.register(Network.init)
             .lifetime(.single)

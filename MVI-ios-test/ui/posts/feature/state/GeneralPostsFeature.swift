@@ -29,8 +29,8 @@ final class PostsGeneralFeature: PostsBaseFeature<GeneralPostsState, PostsGenera
             state.hasMoreModels = !result.isEmpty
         }
         
-        private func request(state: State, perPage: Int) -> Single<[PostsContainer.Model]> {
-            let after = state.currentState == .loadingMore ? state.loaded.last?.id : 0
+        private func request(state: State, more: Bool, perPage: Int) -> Single<[PostsContainer.Model]> {
+            let after = more ? state.loaded.last?.id : 0
             
             return network
                 .request(.getImportantPosts(perPage: perPage, after: after))
@@ -41,12 +41,12 @@ final class PostsGeneralFeature: PostsBaseFeature<GeneralPostsState, PostsGenera
         }
         
         func refresh(state: State, perPage: Int) -> Single<RefreshResult> {
-            request(state: state, perPage: perPage)
+            request(state: state, more: false, perPage: perPage)
                 .map { RefreshResult(loaded: $0) }
         }
         
         func loadMore(state: State, perPage: Int) -> Single<[PostsContainer.Model]> {
-            request(state: state, perPage: perPage)
+            request(state: state, more: true, perPage: perPage)
         }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import DeclarativeTVC
 
-public class TVC: DeclarativeTVC, PropsReceiver, ActionsReceiver, HasPresenter, PropsReceiverWithSubscriptionBehaviour {
+public class TVC<Consumable>: DeclarativeTVC, PropsReceiver, ActionsReceiver, Consumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
     public struct Props {
         let tableModel: TableModel
         let refreshing: Bool
@@ -19,38 +19,32 @@ public class TVC: DeclarativeTVC, PropsReceiver, ActionsReceiver, HasPresenter, 
         let loadMore: Command
     }
     
-    var presenter: PresenterProtocol!
-    static var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
+    public var _presenter: PresenterProtocol!
+    open var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
         return .onAppearing
     }
 
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        if type(of: self).subscriptionBehaviour == .always {
-            presenter.subscribe()
+        if subscriptionBehaviour == .always {
+            _presenter.subscribe()
         }
     }
     
-    override open func viewWillAppear(_ animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if type(of: self).subscriptionBehaviour == .onAppearing {
-//        if ReduxVMSettings.logSubscribeMessages {
-//            print("subscribe presenter \(type(of: self))")
-//        }
-            presenter.subscribe()
+        if subscriptionBehaviour == .onAppearing {
+            _presenter.subscribe()
         }
     }
 
-    override open func viewWillDisappear(_ animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        if type(of: self).subscriptionBehaviour == .onAppearing {
-//        if ReduxVMSettings.logSubscribeMessages {
-//            print("unsubscribe presenter \(type(of: self))")
-//        }
-            presenter.unsubscribe()
+        if subscriptionBehaviour == .onAppearing {
+            _presenter.unsubscribe()
         }
     }
     
@@ -81,6 +75,9 @@ public class TVC: DeclarativeTVC, PropsReceiver, ActionsReceiver, HasPresenter, 
             }
             .disposed(by: rx.disposeBag(tag: "Refresh"))
     }
+    
+    //to override
+    open func accept(_ t: Consumable) {}
 }
 
 extension UITableView {

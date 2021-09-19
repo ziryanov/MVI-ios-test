@@ -17,10 +17,10 @@ final class MainTabsVC: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let router1 = Router(screen: .generalPosts)
+        let router1 = Router(screen: .posts(source: .feed))
         let vc1 = router1.craeteViewController()
-        
-        let router2 = Router(screen: .posts(source: .interesting))
+
+        let router2 = Router(screen: .generalPosts)
         let vc2 = router2.craeteViewController()
         
         let vc3 = LogoutVC.controllerFromStoryboard()
@@ -34,5 +34,9 @@ final class MainTabsVC: UITabBarController {
         tabBar.items?.enumerated().forEach {
             $0.1.image = icons[$0.0]
         }
+    }
+    
+    deinit {
+        print("deinit tabs")
     }
 }
