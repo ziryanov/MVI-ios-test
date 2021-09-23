@@ -7,35 +7,42 @@
 
 import Foundation
 
-enum TableViewWish {
-    case refresh, loadMore
+enum TableViewWish<LoadingMoreOptions> {
+    case refresh
+    case loadMore(LoadingMoreOptions)
 }
 
-struct PostsLoadingFinishedNews {
-    let loadedModels: [PostsContainer.Model]
+struct EntitiesLoadingFinishedNews<Model: ModelWithId> {
+    let loadedModels: [Model]
 }
 
-protocol PostsRequesterRefreshResultProtocol {
-    var loaded: [PostsContainer.Model] { get }
+protocol EntitiesRequester_Result {
+    associatedtype Model
+    var loaded: [Model] { get }
 }
 
-protocol PostsRequester {
-    associatedtype State
-    associatedtype RefreshResult: PostsRequesterRefreshResultProtocol
+protocol EntitiesRequester {
+    associatedtype State: EntitiesState
+    associatedtype RefreshResult: EntitiesRequester_Result where RefreshResult.Model == State.Model
     
-    typealias LoadMoreResult = [PostsContainer.Model]
+    typealias LoadingMoreOptions = State.LoadingMoreOptions
+    associatedtype LoadMoreResult: EntitiesRequester_Result where LoadMoreResult.Model == State.Model
     
     func updateStateAfterSuccessRefresh(state: inout State, result: RefreshResult)
-    func updateStateAfterSuccessLoadMore(state: inout State, result: LoadMoreResult)
+    func updateStateAfterSuccessLoadMore(state: inout State, option: LoadingMoreOptions, result: LoadMoreResult)
     
     func refresh(state: State, perPage: Int) -> Single<RefreshResult>
-    func loadMore(state: State, perPage: Int) -> Single<LoadMoreResult>
+    func loadMore(_ option: LoadingMoreOptions, state: State, perPage: Int) -> Single<LoadMoreResult>
+    
+    var perPage: Int { get }
 }
 
-class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>: BaseFeature<TableViewWish, PostState, PostsLoadingFinishedNews, PostsBaseFeature.InnerPart> where Requester.State == PostState {
+class EntitiesBaseFeature<State, Requester: EntitiesRequester>: BaseFeature<TableViewWish<State.LoadingMoreOptions>, State, EntitiesLoadingFinishedNews<State.Model>, EntitiesBaseFeature.InnerPart> where Requester.State == State {
+    typealias Model = State.Model
+    typealias LoadingMoreOptions = State.LoadingMoreOptions
     
-    init(state: PostState, containerFeature: PostsContainerFeature?, requester: Requester) {
-        let innerPart = InnerPart(postsUpdates: containerFeature?.news ?? .empty(), requester: requester)
+    init<Contanier: ModelsContainer>(state: State, containerFeature: ModelsContainerFeature<Contanier>?, requester: Requester) where Contanier.Model == Model {
+        let innerPart = InnerPart(updates: containerFeature?.news ?? .empty(), requester: requester)
         super.init(initialState: state, innerPart: innerPart)
         
         if containerFeature != nil {
@@ -47,42 +54,42 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
         }
     }
     
-    class InnerPart: InnerFeatureProtocol {
+    class InnerPart: FeatureInnerPart {
         private let requester: Requester
-        private let postsUpdates: Observable<PostsContainerFeature.News>
+        private let updates: Observable<ModelsUpdatedNews<Model>>
         private weak var skipUpdatedFrom: AnyObject?
-        fileprivate init(postsUpdates: Observable<PostsContainerFeature.News>, requester: Requester) {
-            self.postsUpdates = postsUpdates
+        fileprivate init(updates: Observable<ModelsUpdatedNews<Model>>, requester: Requester) {
+            self.updates = updates
             self.requester = requester
         }
         
-        typealias Wish = TableViewWish
+        typealias Wish = TableViewWish<LoadingMoreOptions>
         enum Action {
             case refresh
             case startRefreshRequest
 
-            case loadMore
-            case startLoadMoreRequest(UUID)
+            case loadMore(LoadingMoreOptions)
+            case startLoadMoreRequest(LoadingMoreOptions, UUID)
 
-            case updateModels([PostsContainer.ModelId: PostsContainer.Model])
+            case updateModels([Model.ModelId: Model])
         }
-        typealias State = PostState
+
         enum Effect {
             case startRefresh
             case finishRefresh(Requester.RefreshResult)
             case refreshFailed(String)
             
-            case startLoadMore(UUID)
-            case finishLoadMore([PostsContainer.Model])
+            case startLoadMore(LoadingMoreOptions, UUID)
+            case finishLoadMore(LoadingMoreOptions, Requester.LoadMoreResult?)
             
-            case updateLoaded([PostsContainer.Model])
+            case updateLoaded([Model])
         }
-        typealias News = PostsLoadingFinishedNews
+        typealias News = EntitiesLoadingFinishedNews<Model>
         
         func bootstrapper() -> Observable<Action> {
             let array: [Observable<Action>] = [
                 Observable.just(Action.startRefreshRequest),
-                postsUpdates
+                updates
                     .skipWhile { [weak self] in $0.updater === self }
                     .map { Action.updateModels($0.updated) }
             ]
@@ -93,8 +100,8 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
             switch wish {
             case .refresh:
                 return .refresh
-            case .loadMore:
-                return .loadMore
+            case .loadMore(let option):
+                return .loadMore(option)
             }
         }
 
@@ -106,24 +113,24 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
                     .asObservable()
             case .startRefreshRequest:
                 return requester
-                    .refresh(state: stateHolder.state, perPage: perPage)
+                    .refresh(state: stateHolder.state, perPage: requester.perPage)
                     .map { Effect.finishRefresh($0) }
                     .catchError { _ in .just(Effect.refreshFailed("refresh failed")) }
                     .asObservable()
-            case .loadMore:
+            case .loadMore(let option):
                 return Maybe<Effect>
-                    .just(.startLoadMore(UUID()), if: stateHolder.state.currentState == .loaded)
+                    .just(.startLoadMore(option, UUID()), if: stateHolder.state.currentState.isReadyForLoadMore(for: option) && stateHolder.state.loadMoreEnabled(for: option))
                     .asObservable()
-            case .startLoadMoreRequest(let uuid):
+            case .startLoadMoreRequest(let option, let uuid):
                 return requester
-                    .loadMore(state: stateHolder.state, perPage: perPage)
+                    .loadMore(option, state: stateHolder.state, perPage: requester.perPage)
                     .map { [weak stateHolder] in
-                        guard case .loadingMore(let currentUuid) = stateHolder?.state.currentState, currentUuid == uuid else {
+                        guard stateHolder?.state.currentState.isLoadingMore(for: option, and: uuid) == true else {
                             throw ApiError(reason: .cancelled)
                         }
-                        return Effect.finishLoadMore($0)
+                        return Effect.finishLoadMore(option, $0)
                     }
-                    .catchError { _ in .just(Effect.finishLoadMore([])) }
+                    .catchError { _ in .just(Effect.finishLoadMore(option, nil)) }
                     .asObservable()
             case .updateModels(let modelsDict):
                 return Maybe<Effect>
@@ -152,12 +159,14 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
                 requester.updateStateAfterSuccessRefresh(state: &state, result: result)
             case .refreshFailed(let text):
                 state.currentState = .failed(text)
-            case .startLoadMore(let uuid):
-                state.currentState = .loadingMore(uuid)
-            case .finishLoadMore(let models):
-                state.currentState = .loaded
-                state.loaded += models
-                requester.updateStateAfterSuccessLoadMore(state: &state, result: models)
+            case .startLoadMore(let option, let uuid):
+                state.currentState.setLoadMore(for: option, uuid: uuid)
+            case .finishLoadMore(let option, let result):
+                state.currentState.setLoadMore(for: option, uuid: nil)
+                if let result = result {
+                    state.loaded += result.loaded
+                    requester.updateStateAfterSuccessLoadMore(state: &state, option: option, result: result)
+                }
             case .updateLoaded(let models):
                 state.loaded = models
             }
@@ -166,28 +175,29 @@ class PostsBaseFeature<PostState: PostsStateProtocol, Requester: PostsRequester>
         func news(from action: Wish, effect: Effect, state: State) -> News? {
             switch effect {
             case .finishRefresh(let result):
-                return PostsLoadingFinishedNews(loadedModels: result.loaded)
-            case .finishLoadMore(let models):
-                return PostsLoadingFinishedNews(loadedModels: models)
-            default:
-                return nil
-            }
-        }
-        
-        func postProcessor(oldState: PostState, action: Action, effect: Effect, state: PostState) -> Action? {
-            if oldState.currentState != state.currentState {
-                switch state.currentState {
-                case .initialLoading, .refreshing:
-                    return .startRefreshRequest
-                case .loadingMore(let uuid):
-                    return .startLoadMoreRequest(uuid)
-                default:
-                    break
+                return EntitiesLoadingFinishedNews(loadedModels: result.loaded)
+            case .finishLoadMore(_, let result):
+                if let result = result {
+                    return EntitiesLoadingFinishedNews(loadedModels: result.loaded)
                 }
+            default:
+                break
             }
             return nil
         }
         
-        private let perPage = 20
+        func postProcessor(oldState: State, action: Action, effect: Effect, state: State) -> Action? {
+            switch effect {
+            case .startRefresh:
+                return .startRefreshRequest
+            case .startLoadMore(let option, let uuid):
+                return .startLoadMoreRequest(option, uuid)
+            default:
+                break
+            }
+            return nil
+        }
     }
 }
+
+typealias TableViewWishDefault = TableViewWish<LoadingMoreDefault>

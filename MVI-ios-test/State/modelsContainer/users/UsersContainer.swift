@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UsersContainer: ModelsContainerProtocol {
+struct UsersContainer: ModelsContainer {
     typealias Model = User
 
     struct BasicUserInfo: Equatable, Hashable {

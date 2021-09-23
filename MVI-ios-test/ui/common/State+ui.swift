@@ -8,14 +8,6 @@
 import Foundation
 import CoreGraphics
 
-enum TableListState: Equatable {
-    case initialLoading
-    case loaded
-    case failed(String)
-    case refreshing
-    case loadingMore(UUID)
-}
-
 enum SingleModelState {
     case loading
     case loaded(error: String?)

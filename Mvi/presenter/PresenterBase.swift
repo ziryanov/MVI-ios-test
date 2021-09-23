@@ -8,12 +8,12 @@
 import Foundation
 import RxSwift
 
-public protocol PresenterProtocol {
+public protocol Presenter {
     func subscribe()
     func unsubscribe()
 }
 
-open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & PresenterHolder & AnyObject, PresenterFeature: FeatureProtocol>: PresenterProtocol where View.Consumable == PresenterFeature.News {
+open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & PresenterHolder & AnyObject, PresenterFeature: Feature>: Presenter where View.Consumable == PresenterFeature.News {
 
     public typealias State = PresenterFeature.Element
 

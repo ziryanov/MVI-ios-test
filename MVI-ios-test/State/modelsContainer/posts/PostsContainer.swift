@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-struct PostsContainer: ModelsContainerProtocol {
+struct PostsContainer: ModelsContainer {
     typealias Model = Post
 
     struct Post: ModelWithId, Hashable, Equatable {

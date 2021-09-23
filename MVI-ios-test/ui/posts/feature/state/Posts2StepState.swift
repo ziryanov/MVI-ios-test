@@ -13,17 +13,18 @@ enum Posts2StepSource: Equatable {
     case firstTwo
 }
 
-struct Posts2StepState: PostsStateProtocol {
-    var uuid = UUID().uuidString
+struct Posts2StepState: EntitiesState {
+    typealias Model = PostsContainer.Post
+    
     let source: Posts2StepSource
     
-    var currentState = TableListState.initialLoading
+    var currentState = TableListStateDefault.initialLoading
     
     var allIds: [PostsContainer.ModelId]? = nil
+    var requestedIds = [PostsContainer.ModelId]()
     var loaded = [PostsContainer.Model]()
     
-    var loadMoreEnabled: Bool {
-        guard let allIds = allIds, currentState == .loaded, !loaded.isEmpty else { return false }
-        return loaded.last?.id != allIds.last
+    func loadMoreEnabled(for: LoadingMoreDefault) -> Bool {
+        return requestedIds.last != allIds?.last
     }
 }

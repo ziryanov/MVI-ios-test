@@ -7,15 +7,14 @@
 
 import Foundation
 
-struct GeneralPostsState: PostsStateProtocol {
-    var uuid = UUID().uuidString
+struct GeneralPostsState: EntitiesState {
+    typealias Model = PostsContainer.Post
     
-    var currentState = TableListState.initialLoading
+    var currentState = TableListStateDefault.initialLoading
     var loaded = [PostsContainer.Model]()
     
-    var hasMoreModels = false
-    var loadMoreEnabled: Bool {
-        guard currentState == .loaded else { return false }
-        return hasMoreModels
+    var hasNoMoreModels = false
+    func loadMoreEnabled(for: LoadingMoreDefault) -> Bool {
+        !hasNoMoreModels
     }
 }

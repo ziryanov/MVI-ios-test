@@ -20,7 +20,7 @@ public protocol ActionsReceiver {
 }
 
 public protocol PresenterHolder {
-    var _presenter: PresenterProtocol! { get set }
+    var _presenter: Presenter! { get set }
 }
 
 public enum PropsReceiverSubscriptionBehaviour {
@@ -33,7 +33,7 @@ public protocol PropsReceiverWithSubscriptionBehaviour {
 }
 
 open class VC<Props, Actions, Consumable>: UIViewController, PropsReceiver, ActionsReceiver, Consumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
-    public var _presenter: PresenterProtocol!
+    public var _presenter: Presenter!
     
     open var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
         return .onAppearing

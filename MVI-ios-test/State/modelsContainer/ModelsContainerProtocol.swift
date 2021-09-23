@@ -1,5 +1,5 @@
 //
-//  ModelsContainerProtocol.swift
+//  ModelsContainer.swift
 //  MVI-ios-test
 //
 //  Created by ziryanov on 08.08.2021.
@@ -13,7 +13,7 @@ protocol ModelWithId {
     var id: ModelId { get }
 }
 
-protocol ModelsContainerProtocol {
+protocol ModelsContainer {
     associatedtype Model: ModelWithId
     typealias ModelId = Model.ModelId
 }

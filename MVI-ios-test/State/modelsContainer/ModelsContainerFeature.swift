@@ -7,14 +7,14 @@
 
 import Foundation
 
-class ModelsContainerFeature<Container: ModelsContainerProtocol>: BaseFeature<ModelsContainerFeature.UpdateModelsWish, Container, ModelsContainerFeature.ModelsUpdatedNews, ModelsContainerFeature.InnerPart> {
+struct ModelsUpdatedNews<Model: ModelWithId> {
+    let updated: [Model.ModelId: Model]
+    weak var updater: AnyObject?
+}
+
+class ModelsContainerFeature<Container: ModelsContainer>: BaseFeature<ModelsContainerFeature.UpdateModelsWish, Container, ModelsUpdatedNews<Container.Model>, ModelsContainerFeature.InnerPart> {
     struct UpdateModelsWish {
         let updated: [Container.Model]
-        weak var updater: AnyObject?
-    }
-    
-    struct ModelsUpdatedNews {
-        let updated: [Container.ModelId: Container.Model]
         weak var updater: AnyObject?
     }
     
@@ -22,9 +22,9 @@ class ModelsContainerFeature<Container: ModelsContainerProtocol>: BaseFeature<Mo
         super.init(initialState: initialState, innerPart: InnerPart())
     }
     
-    struct InnerPart: InnerFeatureProtocol {
+    struct InnerPart: FeatureInnerPart {
         typealias Wish = UpdateModelsWish
-        typealias News = ModelsUpdatedNews
+        typealias News = ModelsUpdatedNews<Container.Model>
         typealias State = Container
         typealias Action = UpdateModelsWish
         typealias Effect = UpdateModelsWish

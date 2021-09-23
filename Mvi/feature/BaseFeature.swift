@@ -15,13 +15,13 @@ public protocol StateHolder: AnyObject {
     var state: State { get }
 }
 
-public protocol FeatureProtocol: Consumer, StateHolder, ObservableType where State == Element {
+public protocol Feature: Consumer, StateHolder, ObservableType where State == Element {
     associatedtype News
     
     var news: Observable<News> { get }
 }
 
-public protocol InnerFeatureProtocol {
+public protocol FeatureInnerPart {
     associatedtype Wish
     associatedtype Action
     associatedtype Effect
@@ -41,7 +41,7 @@ public protocol InnerFeatureProtocol {
     func postProcessor(oldState: State, action: Action, effect: Effect, state: State) -> Action?
 }
 
-extension InnerFeatureProtocol where Self: Any {
+extension FeatureInnerPart where Self: Any {
     func bootstrapper() -> Observable<Action> {
         .empty()
     }
@@ -55,23 +55,23 @@ extension InnerFeatureProtocol where Self: Any {
     }
 }
 
-extension InnerFeatureProtocol where Wish == Action {
+extension FeatureInnerPart where Wish == Action {
     func action(from wish: Wish) -> Action {
         wish
     }
 }
 
-extension InnerFeatureProtocol where Effect == Action {
+extension FeatureInnerPart where Effect == Action {
     func actor<Holder: StateHolder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder.State == State {
         .just(action)
     }
 }
 
-extension InnerFeatureProtocol where State == Void {
+extension FeatureInnerPart where State == Void {
     func reduce(with effect: State, state: inout State) { }
 }
 
-open class BaseFeature<Wish, State, News, InnerPart: InnerFeatureProtocol>: FeatureProtocol where InnerPart.Wish == Wish, InnerPart.State == State, InnerPart.News == News {
+open class BaseFeature<Wish, State, News, InnerPart: FeatureInnerPart>: Feature where InnerPart.Wish == Wish, InnerPart.State == State, InnerPart.News == News {
     public typealias Consumable = Wish
     public typealias Element = State
     

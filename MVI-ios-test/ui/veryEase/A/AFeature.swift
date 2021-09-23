@@ -12,7 +12,7 @@ class AFeature: BaseFeature<Int, Int, Int, AFeature.InnerPart> {
     init() {
         super.init(initialState: 1, innerPart: InnerPart())
     }
-    class InnerPart: InnerFeatureProtocol {
+    class InnerPart: FeatureInnerPart {
         func reduce(with effect: Wish, state: inout Int) {
             state = effect
         }

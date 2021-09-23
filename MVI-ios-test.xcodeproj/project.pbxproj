@@ -45,6 +45,7 @@
 		61205D1526B93755007B93BE /* AuthVCModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61205D1426B93755007B93BE /* AuthVCModule.swift */; };
 		61205D3326B9397A007B93BE /* UIView+shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61205D3226B9397A007B93BE /* UIView+shake.swift */; };
 		61205D3826B939A6007B93BE /* UIStackView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61205D3726B939A6007B93BE /* UIStackView+Helper.swift */; };
+		61734E3326FB4ACC00B15E07 /* SwiftExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61734E3226FB4ACC00B15E07 /* SwiftExtensions.swift */; };
 		617FB84426BB054600E51D11 /* UIViewController+child.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB84326BB054600E51D11 /* UIViewController+child.swift */; };
 		617FB84726BB070C00E51D11 /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 617FB84626BB070C00E51D11 /* Auth.storyboard */; };
 		617FB84C26BB0C3B00E51D11 /* GreenButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB84A26BB0C3B00E51D11 /* GreenButton.swift */; };
@@ -55,7 +56,7 @@
 		617FB86F26BE8F5000E51D11 /* NSObject+nameOfClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB86E26BE8F5000E51D11 /* NSObject+nameOfClass.swift */; };
 		617FB87226BEA49C00E51D11 /* ModelWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB87126BEA49C00E51D11 /* ModelWatcher.swift */; };
 		617FB87726BFC77600E51D11 /* State+ui.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB87626BFC77600E51D11 /* State+ui.swift */; };
-		617FB87C26BFC87E00E51D11 /* PostsStateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB87926BFC87E00E51D11 /* PostsStateProtocol.swift */; };
+		617FB87C26BFC87E00E51D11 /* EntitiesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB87926BFC87E00E51D11 /* EntitiesState.swift */; };
 		617FB87D26BFC87E00E51D11 /* GeneralPostsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB87A26BFC87E00E51D11 /* GeneralPostsState.swift */; };
 		617FB87E26BFC87E00E51D11 /* Posts2StepState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB87B26BFC87E00E51D11 /* Posts2StepState.swift */; };
 		617FB88126BFC9C700E51D11 /* ModelsContainerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88026BFC9C700E51D11 /* ModelsContainerProtocol.swift */; };
@@ -63,7 +64,7 @@
 		617FB88626BFCE8900E51D11 /* UsersContainerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88526BFCE8900E51D11 /* UsersContainerFeature.swift */; };
 		617FB88826BFCED400E51D11 /* ModelsContainerDI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88726BFCED400E51D11 /* ModelsContainerDI.swift */; };
 		617FB88B26BFD32000E51D11 /* PostsContainerFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88A26BFD31F00E51D11 /* PostsContainerFeature.swift */; };
-		617FB88D26BFD60700E51D11 /* PostsBaseFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88C26BFD60700E51D11 /* PostsBaseFeature.swift */; };
+		617FB88D26BFD60700E51D11 /* EntittiesBaseFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88C26BFD60700E51D11 /* EntittiesBaseFeature.swift */; };
 		617FB88F26C01DB100E51D11 /* Post2StepFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB88E26C01DB100E51D11 /* Post2StepFeature.swift */; };
 		617FB89126C027D700E51D11 /* GeneralPostsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617FB89026C027D700E51D11 /* GeneralPostsFeature.swift */; };
 		6199E35A26B5B21100FACDBD /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6199E35926B5B21100FACDBD /* RxExtensions.swift */; };
@@ -177,6 +178,7 @@
 		61205D1426B93755007B93BE /* AuthVCModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthVCModule.swift; sourceTree = "<group>"; };
 		61205D3226B9397A007B93BE /* UIView+shake.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+shake.swift"; sourceTree = "<group>"; };
 		61205D3726B939A6007B93BE /* UIStackView+Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Helper.swift"; sourceTree = "<group>"; };
+		61734E3226FB4ACC00B15E07 /* SwiftExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftExtensions.swift; sourceTree = "<group>"; };
 		617FB84326BB054600E51D11 /* UIViewController+child.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+child.swift"; sourceTree = "<group>"; };
 		617FB84626BB070C00E51D11 /* Auth.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Auth.storyboard; sourceTree = "<group>"; };
 		617FB84A26BB0C3B00E51D11 /* GreenButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GreenButton.swift; sourceTree = "<group>"; };
@@ -187,7 +189,7 @@
 		617FB86E26BE8F5000E51D11 /* NSObject+nameOfClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSObject+nameOfClass.swift"; sourceTree = "<group>"; };
 		617FB87126BEA49C00E51D11 /* ModelWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWatcher.swift; sourceTree = "<group>"; };
 		617FB87626BFC77600E51D11 /* State+ui.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "State+ui.swift"; sourceTree = "<group>"; };
-		617FB87926BFC87E00E51D11 /* PostsStateProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostsStateProtocol.swift; sourceTree = "<group>"; };
+		617FB87926BFC87E00E51D11 /* EntitiesState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitiesState.swift; sourceTree = "<group>"; };
 		617FB87A26BFC87E00E51D11 /* GeneralPostsState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneralPostsState.swift; sourceTree = "<group>"; };
 		617FB87B26BFC87E00E51D11 /* Posts2StepState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Posts2StepState.swift; sourceTree = "<group>"; };
 		617FB88026BFC9C700E51D11 /* ModelsContainerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsContainerProtocol.swift; sourceTree = "<group>"; };
@@ -195,7 +197,7 @@
 		617FB88526BFCE8900E51D11 /* UsersContainerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersContainerFeature.swift; sourceTree = "<group>"; };
 		617FB88726BFCED400E51D11 /* ModelsContainerDI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsContainerDI.swift; sourceTree = "<group>"; };
 		617FB88A26BFD31F00E51D11 /* PostsContainerFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsContainerFeature.swift; sourceTree = "<group>"; };
-		617FB88C26BFD60700E51D11 /* PostsBaseFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsBaseFeature.swift; sourceTree = "<group>"; };
+		617FB88C26BFD60700E51D11 /* EntittiesBaseFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntittiesBaseFeature.swift; sourceTree = "<group>"; };
 		617FB88E26C01DB100E51D11 /* Post2StepFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post2StepFeature.swift; sourceTree = "<group>"; };
 		617FB89026C027D700E51D11 /* GeneralPostsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralPostsFeature.swift; sourceTree = "<group>"; };
 		6199E33926B5A26100FACDBD /* Podfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -545,8 +547,8 @@
 		617FB87826BFC87000E51D11 /* state */ = {
 			isa = PBXGroup;
 			children = (
-				617FB87926BFC87E00E51D11 /* PostsStateProtocol.swift */,
-				617FB88C26BFD60700E51D11 /* PostsBaseFeature.swift */,
+				617FB87926BFC87E00E51D11 /* EntitiesState.swift */,
+				617FB88C26BFD60700E51D11 /* EntittiesBaseFeature.swift */,
 				617FB87A26BFC87E00E51D11 /* GeneralPostsState.swift */,
 				617FB89026C027D700E51D11 /* GeneralPostsFeature.swift */,
 				617FB87B26BFC87E00E51D11 /* Posts2StepState.swift */,
@@ -650,6 +652,7 @@
 				617FB86E26BE8F5000E51D11 /* NSObject+nameOfClass.swift */,
 				6106CC6926C4178600643A6C /* Int+shortText.swift */,
 				61DD7AB926CA9BE400B56313 /* UIView+inspectable.swift */,
+				61734E3226FB4ACC00B15E07 /* SwiftExtensions.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -1073,7 +1076,7 @@
 				61205D1526B93755007B93BE /* AuthVCModule.swift in Sources */,
 				61AAAD5726F3770D0076ED38 /* LikingPostFeature.swift in Sources */,
 				61AAAD7826F71CCB0076ED38 /* UserFollowersFollowerCell.swift in Sources */,
-				617FB87C26BFC87E00E51D11 /* PostsStateProtocol.swift in Sources */,
+				617FB87C26BFC87E00E51D11 /* EntitiesState.swift in Sources */,
 				6103B67926A454E900CD6A50 /* Middleware.swift in Sources */,
 				617FB87E26BFC87E00E51D11 /* Posts2StepState.swift in Sources */,
 				6106CC6126C414CD00643A6C /* PostCell.swift in Sources */,
@@ -1085,7 +1088,7 @@
 				6103B58626A304CB00CD6A50 /* RootVC.swift in Sources */,
 				6103B68126A457AA00CD6A50 /* Connection.swift in Sources */,
 				619ECF7326A6E24300D37B86 /* UserDefault.swift in Sources */,
-				617FB88D26BFD60700E51D11 /* PostsBaseFeature.swift in Sources */,
+				617FB88D26BFD60700E51D11 /* EntittiesBaseFeature.swift in Sources */,
 				61AAAD6426F5DEFB0076ED38 /* UserVC.swift in Sources */,
 				617FB88B26BFD32000E51D11 /* PostsContainerFeature.swift in Sources */,
 				617FB88626BFCE8900E51D11 /* UsersContainerFeature.swift in Sources */,
@@ -1137,6 +1140,7 @@
 				619ECF6626A6E20200D37B86 /* Session.swift in Sources */,
 				61205D3826B939A6007B93BE /* UIStackView+Helper.swift in Sources */,
 				619ECF5C26A6DFA000D37B86 /* Struct+safe.swift in Sources */,
+				61734E3326FB4ACC00B15E07 /* SwiftExtensions.swift in Sources */,
 				61DD7AC826CAC26500B56313 /* ParchmentState.swift in Sources */,
 				61C6E46726B560E3002D695B /* AuthCredentialsValidator.swift in Sources */,
 			);

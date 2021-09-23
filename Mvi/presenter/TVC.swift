@@ -19,7 +19,7 @@ public class TVC<Consumable>: DeclarativeTVC, PropsReceiver, ActionsReceiver, Co
         let loadMore: Command
     }
     
-    public var _presenter: PresenterProtocol!
+    public var _presenter: Presenter!
     open var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
         return .onAppearing
     }
@@ -63,7 +63,8 @@ public class TVC<Consumable>: DeclarativeTVC, PropsReceiver, ActionsReceiver, Co
     public func apply(actions: Actions) {
         tableView.rx.willDisplayCell
             .bind { [action = actions.loadMore, unowned tableView] (_, ip) in
-                if tableView!.distanceToEnd(from: ip) < 10 {
+                print("distance = \(tableView!.distanceToEnd(from: ip)) \(tableView?.numberOfRows(inSection: 0) ?? 0)")
+                if tableView!.distanceToEnd(from: ip) < 2 {
                     action.perform()
                 }
             }

@@ -46,7 +46,7 @@ enum UserVCModule {
                     feature.accept(.changeSegment(segments[$0]))
                 }))
                 
-                let posts = state.loadedPosts(for: state.currentSegment)
+                let posts = state.loadedPosts[state.currentSegment]
                 if posts.isEmpty {
                     rows.append(LoadingCellVM())
                 }
@@ -62,7 +62,7 @@ enum UserVCModule {
                                repostPressed: Command(action: {}),
                                selectCommand: Command(action: {}))
                 })
-                if state.currentState.isReadyForLoadMore(for: state.currentSegment) {
+                if state.loadMoreEnabled(for: state.currentSegment) {
                     rows.append(LoadingCellVM())
                 }
             } else {

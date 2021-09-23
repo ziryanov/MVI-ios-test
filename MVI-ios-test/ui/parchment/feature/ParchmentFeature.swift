@@ -13,7 +13,7 @@ final class ParchmentFeature: BaseFeature<ParchmentFeature.Wish, ParchmentState,
         case changeSubsegmentInCurrentChild(Int)
     }
     
-    struct InnerPart: InnerFeatureProtocol {
+    struct InnerPart: FeatureInnerPart {
         typealias Wish = ParchmentFeature.Wish
         typealias News = Never
         typealias State = ParchmentState

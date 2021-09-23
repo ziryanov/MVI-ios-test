@@ -26,7 +26,7 @@ final class RouterFeature: BaseFeature<RouterFeature.Wish, RouterFeature.State, 
         super.init(initialState: (), innerPart: InnerPart(sessionFeature: sessionFeature))
     }
 
-    struct InnerPart: InnerFeatureProtocol {
+    struct InnerPart: FeatureInnerPart {
         private let sessionFeature: SessionFeature
         fileprivate init(sessionFeature: SessionFeature) {
             self.sessionFeature = sessionFeature

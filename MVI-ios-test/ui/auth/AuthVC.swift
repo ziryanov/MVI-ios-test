@@ -73,10 +73,10 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.New
     }
     
     @ModelWatcherBuilder var modelWatcher: ModelWatcher<AuthVCModule.Props> {
-        Watch(\AuthVCModule.Props.identifier) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.identifier) { [unowned self] in
             self.identifier.text = $0
         }
-        Watch(\AuthVCModule.Props.identifierError) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.identifierError) { [unowned self] in
             if let error = $0 {
                 self.identifier.showError(message: error)
             } else {
@@ -84,10 +84,10 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.New
             }
         }
 
-        Watch(\AuthVCModule.Props.password) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.password) { [unowned self] in
             self.password.text = $0
         }
-        Watch(\AuthVCModule.Props.passwordError) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.passwordError) { [unowned self] in
             if let error = $0 {
                 self.password.showError(message: error)
             } else {
@@ -95,7 +95,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.New
             }
         }
 
-        Watch(\AuthVCModule.Props.currentSegment) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.currentSegment) { [unowned self] in
             if let i = self.segmentIndexes.firstIndex(of: $0) {
                 self.segment.selectedSegmentIndex = i
             }
@@ -106,7 +106,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.New
             self.requestButton.loadingString = self.buttonLoadingName(for: $0)
         }
 
-        Watch(\AuthVCModule.Props.accept) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.accept) { [unowned self] in
             if $0 {
                 self.acceptPolicy.select(animated: true)
             } else {
@@ -114,7 +114,7 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.New
             }
         }
 
-        Watch(\AuthVCModule.Props.buttonLoading) { [unowned self] in
+        AnyWatch(\AuthVCModule.Props.buttonLoading) { [unowned self] in
             self.requestButton.isLoading = $0
         }
     }

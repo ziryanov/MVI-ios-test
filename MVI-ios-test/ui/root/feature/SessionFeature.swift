@@ -22,7 +22,7 @@ final class SessionFeature: BaseFeature<SessionFeature.Wish, SessionState, Sessi
         super.init(initialState: .checking, innerPart: InnerPart(session: session, network: network))
     }
 
-    struct InnerPart: InnerFeatureProtocol {
+    struct InnerPart: FeatureInnerPart {
         private let session: Session
         private let network: Network
         fileprivate init(session: Session, network: Network) {

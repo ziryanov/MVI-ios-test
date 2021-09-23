@@ -48,7 +48,7 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             .disposed(by: disposeBag)
     }
     
-    class InnerPart: InnerFeatureProtocol {
+    class InnerPart: FeatureInnerPart {
         private let network: Network
         private let authCredentialsValidator: AuthCredentialsValidator
         fileprivate init(network: Network, authCredentialsValidator: AuthCredentialsValidator) {

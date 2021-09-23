@@ -49,7 +49,7 @@ class LikingPostFeature: BaseFeature<LikingPostFeature.LikeOrDislikeWish, Liking
             .disposed(by: disposeBag)
     }
     
-    class InnerPart: InnerFeatureProtocol {
+    class InnerPart: FeatureInnerPart {
         typealias Wish = LikingPostFeature.LikeOrDislikeWish
         typealias State = LikingPostFeature.State
         typealias News = LikingPostFeature.News

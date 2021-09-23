@@ -40,7 +40,7 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
         }
     }
 
-    class InnerPart: InnerFeatureProtocol {
+    class InnerPart: FeatureInnerPart {
         private let network: Network
         private let postsUpdates: Observable<PostsContainerFeature.News>
         private let usersUpdates: Observable<UsersContainerFeature.News>
@@ -66,7 +66,8 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
             case updatePostModels([PostsContainer.ModelId: PostsContainer.Model])
         }
 
-        typealias UserPosts = [UserState.Segment: [PostsContainer.Model]]
+        typealias LoadedPosts = (requestedIds: [PostsContainer.ModelId], posts: [PostsContainer.Model])
+        typealias UserPosts = [UserState.Segment: LoadedPosts]
         enum Effect {
             case changeSegment(UserState.Segment)
             
@@ -75,11 +76,11 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
             case refreshFailed(String)
             
             case startLoadMorePosts(UserState.Segment, UUID)
-            case finishLoadMorePosts(UserState.Segment, [PostsContainer.Model])
+            case finishLoadMorePosts(UserState.Segment, LoadedPosts)
             case loadMorePostsFailed(UserState.Segment)
             
             case updateUserModelExceptPosts(UsersContainer.Model)
-            case updatePostModels(UserPosts)
+            case updatePostModels([UserState.Segment: [PostsContainer.Model]])
         }
         
         func bootstrapper() -> Observable<Action> {
@@ -124,28 +125,28 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                     .asObservable()
                     .flatMap { [weak self] user -> Observable<Effect> in
                         guard let self = self else { return .error(ApiError(reason: .cancelled)) }
-                        let loadPostsRequests: [Observable<(UserState.Segment, [PostsContainer.Model])>] = UserState.Segment.allCases
+                        let loadPostsRequests: [Observable<(UserState.Segment, LoadedPosts)>] = UserState.Segment.allCases
                             .map { segment in
                                 let ids = user.postIds(for: segment)
                                 let needLoadIds = Array(ids.prefix(perPage))
                                 return self.loadPosts(ids: needLoadIds)
-                                    .map { (segment, $0) }
+                                    .map { (segment, (ids: needLoadIds, posts: $0)) }
                                     .asObservable()
                             }
                         return Observable.zip(loadPostsRequests)
-                            .map { .finishRefresh(user, Dictionary($0, uniquingKeysWith: { _, v in v })) }
+                            .map { .finishRefresh(user, Dictionary(uniqueKeysWithValues: $0)) }
                     }
                     .catchError { _ in .just(Effect.refreshFailed("load user failed")) }
             case .loadMore:
                 let segment = stateHolder.state.currentSegment
                 return Maybe<Effect>
-                    .just(.startLoadMorePosts(segment, UUID()), if: stateHolder.state.currentState.isReadyForLoadMore(for: segment))
+                    .just(.startLoadMorePosts(segment, UUID()), if: stateHolder.state.currentState.isReadyForLoadMore(for: segment) && stateHolder.state.loadMoreEnabled(for: segment))
                     .asObservable()
             case .startLoadMoreRequest(let segment, let uuid):
                 guard let ids = stateHolder.state.loadedUser?.postIds(for: segment) else {
                     return .error(ApiError(reason: .internalLogicError))
                 }
-                let indexFrom = stateHolder.state.loadedPosts(for: segment).count
+                let indexFrom = stateHolder.state.requestedPostIds[segment].count
                 let needLoadIds = Array(ids.suffix(from: indexFrom).prefix(perPage))
                 
                 return loadPosts(ids: needLoadIds)
@@ -153,7 +154,7 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                         guard stateHolder?.state.currentState.isLoadingMore(for: segment, and: uuid) == true else {
                             throw ApiError(reason: .cancelled)
                         }
-                        return Effect.finishLoadMorePosts(segment, $0)
+                        return Effect.finishLoadMorePosts(segment, (requestedIds: needLoadIds, posts: $0))
                     }
                     .catchError { _ in .just(Effect.loadMorePostsFailed(segment)) }
                     .asObservable()
@@ -170,17 +171,17 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                         let updatedPostsIds = Set(postsDict.keys)
                         
                         let loadedIdsTuples = UserState.Segment.allCases.map { segment in
-                            (segment, stateHolder.state.loadedPosts(for: segment).map { $0.id })
+                            (segment, stateHolder.state.loadedPosts[segment].map { $0.id })
                         }
                         let allLoadedIds = loadedIdsTuples.reduce(Set(), { $0.union($1.1) })
                         
                         let needUpdateIds = updatedPostsIds.intersection(allLoadedIds)
                         guard !needUpdateIds.isEmpty else { return nil }
                         
-                        var updatedPosts = UserPosts()
+                        var updatedPosts = [UserState.Segment: [PostsContainer.Post]]()
                         for (segment, ids) in loadedIdsTuples {
                             guard !Set(ids).intersection(needUpdateIds).isEmpty else { continue }
-                            var loaded = stateHolder.state.loadedPosts(for: segment)
+                            var loaded = stateHolder.state.loadedPosts[segment]
                             for i in 0..<loaded.count {
                                 let id = loaded[i].id
                                 guard let updateTo = postsDict[id] else { continue }
@@ -202,16 +203,18 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                 state.currentState = .refreshing
             case .finishRefresh(let user, let userPosts):
                 state.loadedUser = user
-                for (segment, posts) in userPosts {
-                    state.updatePosts(for: segment) { $0 = posts }
+                for (segment, tuple) in userPosts {
+                    state.requestedPostIds[segment] = tuple.requestedIds
+                    state.loadedPosts[segment] = tuple.posts
                 }
                 state.currentState = .loaded
             case .refreshFailed(let text):
                 state.currentState = .failed(text)
             case .startLoadMorePosts(let segment, let uuid):
                 state.currentState.setLoadMore(for: segment, uuid: uuid)
-            case .finishLoadMorePosts(let segment, let posts):
-                state.updatePosts(for: segment, update: { $0.append(contentsOf: posts) })
+            case .finishLoadMorePosts(let segment, let tuple):
+                state.loadedPosts[segment].append(contentsOf: tuple.posts)
+                state.requestedPostIds[segment].append(contentsOf: tuple.requestedIds)
                 state.currentState.setLoadMore(for: segment, uuid: nil)
             case .loadMorePostsFailed(let segment):
                 state.currentState.setLoadMore(for: segment, uuid: nil)
@@ -224,7 +227,7 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                 }
             case .updatePostModels(let userPosts):
                 for (segment, posts) in userPosts {
-                    state.updatePosts(for: segment) { $0 = posts }
+                    state.loadedPosts[segment] = posts
                 }
             }
         }
@@ -243,10 +246,10 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
         func news(from action: Action, effect: Effect, state: UserState) -> UserFeature.News? {
             switch effect {
             case .finishRefresh(let user, let userPosts):
-                let alPosts = userPosts.reduce(Set(), { $0.union($1.value) })
+                let alPosts = userPosts.reduce(Set(), { $0.union($1.value.posts) })
                 return News.loadedUser(user, Array(alPosts))
-            case .finishLoadMorePosts(_, let posts):
-                return News.loadedPosts(posts)
+            case .finishLoadMorePosts(_, let tuple):
+                return News.loadedPosts(tuple.posts)
             default:
                 return nil
             }

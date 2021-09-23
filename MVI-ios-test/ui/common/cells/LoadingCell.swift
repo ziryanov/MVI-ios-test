@@ -9,6 +9,11 @@ import UIKit
 import DeclarativeTVC
 
 class LoadingCell: XibTableViewCell {
+    @IBOutlet private var loading: UIActivityIndicatorView!
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        loading.startAnimating()
+    }
 }
 
 struct LoadingCellVM: CellModel {

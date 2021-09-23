@@ -12,7 +12,7 @@ import DITranquillity
 enum PostsVCModule {
     typealias ViewController = PostsVC
     
-    class Presenter<PostsState: PostsStateProtocol, PostsFeature: FeatureProtocol>: PresenterBase<ViewController, PostsFeature> where PostsFeature.News == ViewController.Consumable, PostsFeature.State == PostsState, PostsFeature.Consumable == TableViewWish {
+    class Presenter<PostsState: EntitiesState, PostsFeature: Feature>: PresenterBase<ViewController, PostsFeature> where PostsState.Model == PostsContainer.Post, PostsState.LoadingMoreOptions == LoadingMoreDefault, PostsFeature.News == ViewController.Consumable, PostsFeature.State == PostsState, PostsFeature.Consumable == TableViewWishDefault {
         override func _createView() -> ViewController {
             return ViewController.controllerFromStoryboard()
         }
@@ -25,6 +25,7 @@ enum PostsVCModule {
             if state.currentState == .initialLoading {
                 rows.append(LoadingCellVM())
             } else {
+                print("after first refresh")
                 rows.append(contentsOf: state.loaded.map { post in
                     PostCellVM(post: post,
                                userPressed: Command(action: { [unowned routerFeature] in
@@ -37,14 +38,14 @@ enum PostsVCModule {
                                repostPressed: Command(action: {}),
                                selectCommand: Command(action: {}))
                 })
-                if state.loadMoreEnabled {
+                if state.loadMoreEnabled(for: .more) {
                     rows.append(LoadingCellVM())
                 }
             }
             
             return TVC.Props(tableModel: TableModel(rows: rows),
                              refreshing: state.currentState == .refreshing)
-            }
+        }
         
         override func _actions(for state: State) -> ViewController.Actions {
             .init(
@@ -52,7 +53,8 @@ enum PostsVCModule {
                     feature.accept(.refresh)
                 }),
                 loadMore: Command(action: { [unowned feature] in
-                    feature.accept(.loadMore)
+                    print("loadin more!")
+                    feature.accept(.loadMore(.more))
                 }))
         }
     }
