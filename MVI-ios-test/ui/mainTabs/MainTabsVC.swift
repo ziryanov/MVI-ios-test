@@ -35,8 +35,4 @@ final class MainTabsVC: UITabBarController {
             $0.1.image = icons[$0.0]
         }
     }
-    
-    deinit {
-        print("deinit tabs")
-    }
 }

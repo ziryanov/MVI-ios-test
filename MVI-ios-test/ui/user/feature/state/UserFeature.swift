@@ -124,7 +124,7 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                 return loadUser(id: userId)
                     .asObservable()
                     .flatMap { [weak self] user -> Observable<Effect> in
-                        guard let self = self else { return .error(ApiError(reason: .cancelled)) }
+                        guard let self = self else { return .error(ApiError.cancelled) }
                         let loadPostsRequests: [Observable<(UserState.Segment, LoadedPosts)>] = UserState.Segment.allCases
                             .map { segment in
                                 let ids = user.postIds(for: segment)
@@ -152,7 +152,7 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                 return loadPosts(ids: needLoadIds)
                     .map { [weak stateHolder] in
                         guard stateHolder?.state.currentState.isLoadingMore(for: segment, and: uuid) == true else {
-                            throw ApiError(reason: .cancelled)
+                            throw ApiError.cancelled
                         }
                         return Effect.finishLoadMorePosts(segment, (requestedIds: needLoadIds, posts: $0))
                     }

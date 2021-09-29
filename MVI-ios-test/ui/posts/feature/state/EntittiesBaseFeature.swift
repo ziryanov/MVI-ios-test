@@ -1,5 +1,5 @@
 //
-//  PostsFeature.swift
+//  EntittiesBaseFeature.swift
 //  MVI-ios-test
 //
 //  Created by ziryanov on 08.08.2021.
@@ -126,7 +126,7 @@ class EntitiesBaseFeature<State, Requester: EntitiesRequester>: BaseFeature<Tabl
                     .loadMore(option, state: stateHolder.state, perPage: requester.perPage)
                     .map { [weak stateHolder] in
                         guard stateHolder?.state.currentState.isLoadingMore(for: option, and: uuid) == true else {
-                            throw ApiError(reason: .cancelled)
+                            throw ApiError.cancelled
                         }
                         return Effect.finishLoadMore(option, $0)
                     }

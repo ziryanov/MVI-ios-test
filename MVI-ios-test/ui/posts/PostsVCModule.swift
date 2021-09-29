@@ -25,7 +25,6 @@ enum PostsVCModule {
             if state.currentState == .initialLoading {
                 rows.append(LoadingCellVM())
             } else {
-                print("after first refresh")
                 rows.append(contentsOf: state.loaded.map { post in
                     PostCellVM(post: post,
                                userPressed: Command(action: { [unowned routerFeature] in
@@ -53,7 +52,6 @@ enum PostsVCModule {
                     feature.accept(.refresh)
                 }),
                 loadMore: Command(action: { [unowned feature] in
-                    print("loadin more!")
                     feature.accept(.loadMore(.more))
                 }))
         }

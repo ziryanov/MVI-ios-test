@@ -9,7 +9,11 @@ import Foundation
 import Moya
 import RxSwift
 
-final class Network {
+protocol NetworkType {
+    func request(_ token: API) -> Single<Response>
+}
+
+final class Network: NetworkType {
     private let provider: MoyaProvider<API>
    
     init(provider: MoyaProvider<API>) {
@@ -22,6 +26,8 @@ final class Network {
 }
 
 struct ApiError: Swift.Error {
+    static let cancelled = ApiError(reason: .cancelled)
+    
     init(reason: ApiError.Reason, serverError: String? = nil) {
         self.reason = reason
         self.serverError = serverError

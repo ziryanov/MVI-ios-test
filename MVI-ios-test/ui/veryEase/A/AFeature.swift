@@ -59,11 +59,7 @@ final class AVC: VC<AVCModule.Props, Int, Int> {
     }
     
     @IBAction private func buttonPressed() {
-        UIApplication.shared.keyWindow?.rootViewController = BVCModule.Presenter.createAndReturnView(with: AFeature())
-    }
-    
-    deinit {
-        print("deinit A")
+        UIApplication.shared.windows.first?.rootViewController = BVCModule.Presenter.createAndReturnView(with: AFeature())
     }
 }
 
@@ -97,10 +93,6 @@ final class BVC: VC<BVCModule.Props, Int, Int> {
     }
     
     @IBAction private func buttonPressed() {
-        UIApplication.shared.keyWindow?.rootViewController = AVCModule.Presenter.createAndReturnView(with: AFeature())
-    }
-    
-    deinit {
-        print("deinit B")
+        UIApplication.shared.windows.first?.rootViewController = AVCModule.Presenter.createAndReturnView(with: AFeature())
     }
 }

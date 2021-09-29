@@ -37,7 +37,7 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & Pres
         self.view = view
 
         feature.news
-            .observeOn(MainScheduler.instance)
+            .observeOn(RxHolder.mainScheduler)
             .subscribe(onNext: { [weak self] in
                 self?.view?.accept($0)
             })
@@ -53,7 +53,7 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & Pres
         render(feature.state)
 
         feature
-            .observeOn(MainScheduler.instance)
+            .observeOn(RxHolder.mainScheduler)
             .subscribe(onNext: { [unowned self] in
                 self.render($0)
             })

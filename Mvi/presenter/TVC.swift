@@ -63,8 +63,7 @@ public class TVC<Consumable>: DeclarativeTVC, PropsReceiver, ActionsReceiver, Co
     public func apply(actions: Actions) {
         tableView.rx.willDisplayCell
             .bind { [action = actions.loadMore, unowned tableView] (_, ip) in
-                print("distance = \(tableView!.distanceToEnd(from: ip)) \(tableView?.numberOfRows(inSection: 0) ?? 0)")
-                if tableView!.distanceToEnd(from: ip) < 2 {
+                if tableView!.distanceToEnd(from: ip) < 5 {
                     action.perform()
                 }
             }

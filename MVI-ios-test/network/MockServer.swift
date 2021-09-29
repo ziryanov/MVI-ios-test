@@ -149,6 +149,50 @@ final class MockServer {
         saveFollows()
     }
     
+    func getTrends() -> Data {
+        changeTrends()
+        return try! JSONEncoder().encode(trends)
+    }
+    
+    private func randomTrend() -> TrendDTO {
+        TrendDTO(id: UUID().uuidString, name: MockServer.words.randomElement())
+    }
+    
+    private var trends: [TrendDTO] = []
+    private func changeTrends() {
+        if random(5) == 1 {
+            trends.insert(randomTrend(), at: random(trends.count))
+        }
+        if random(5) == 1 {
+            trends.remove(at: random(trends.count))
+        }
+        if random(11) > 9 {
+            let changesCount = 1 + random(3)
+            for _ in 0..<changesCount {
+                let randomIndex = random(trends.count)
+                let trend = trends.remove(at: randomIndex)
+                let newIndex = randomIndex + (random(3) - 2) * (1 + random(4))
+                trends.insert(trend, at: max(0, min(trends.count, newIndex)))
+            }
+        }
+    }
+    
+    static private let words = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".components(separatedBy: " ")
+    
+    static private func randomText() -> String {
+        let wordsCount = Int(10 + random(words.count - 10))
+        return words.shuffled().prefix(wordsCount).joined(separator: " ")
+    }
+    static private func randomImage() -> (String, CGFloat)? {
+        if random(3) == 1 {
+            let id = random(100)
+            let ratio = CGFloat((3 + random(7))) / 5
+            return ("https://picsum.photos/id/\(id)/300/\(Int(300 * ratio))", ratio)
+        } else {
+            return nil
+        }
+    }
+    
     private init() {
         if let version = UserDefaults.standard.string(forKey: "mock_version"), version == self.version, let usersData = UserDefaults.standard.data(forKey: "mock_users"), let postsData = UserDefaults.standard.data(forKey: "mock_posts"), let followsData = UserDefaults.standard.data(forKey: "mock_follows"), let registeredUserData = UserDefaults.standard.data(forKey: "mock_registered") {
             users = try! JSONDecoder().decode([UserDTO].self, from: usersData)
@@ -168,47 +212,30 @@ final class MockServer {
             }
             var date = Date().addingTimeInterval(-60)
             func getDate() -> Date {
-                date.addTimeInterval(30 * TimeInterval(1 + arc4random_uniform(4)))
+                date.addTimeInterval(30 * TimeInterval(1 + random(4)))
                 return date
             }
-            
-            let txt = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            let words = txt.components(separatedBy: " ")
-            
-            func getText() -> String {
-                let wordsCount = Int(10 + arc4random_uniform(UInt32(words.count - 10)))
-                return words.shuffled().prefix(wordsCount).joined(separator: " ")
-            }
-            func getImage() -> (String, CGFloat)? {
-                if arc4random_uniform(3) == 1 {
-                    let id = arc4random_uniform(100)
-                    let ratio = CGFloat((3 + arc4random_uniform(7))) / 5
-                    return ("https://picsum.photos/id/\(id)/300/\(Int(300 * ratio))", ratio)
-                } else {
-                    return nil
-                }
-            }
-            
+                        
             func generatePost(user: UserDTO) -> PostDTO {
-                let image = getImage()
+                let image = MockServer.randomImage()
                 let id = getNextPostId()
-                return PostDTO(id: id, userId: user.id, avatar: user.avatar, username: user.username, date: getDate(), bodyText: "\(id) " + getText(), bodyImage: image?.0, bodyImageRatio: image?.1, likesCount: 0, likedByMe: false, repostsCount: Int(arc4random_uniform(3)), repostedByMe: false, canComment: arc4random_uniform(5) < 4, commentsCount: Int(arc4random_uniform(3)), commentedByMe: false, viewsCount: Int(arc4random_uniform(100_000_000)), general: arc4random_uniform(2) == 1)
+                return PostDTO(id: id, userId: user.id, avatar: user.avatar, username: user.username, date: getDate(), bodyText: "\(id) " + MockServer.randomText(), bodyImage: image?.0, bodyImageRatio: image?.1, likesCount: 0, likedByMe: false, repostsCount: random(3), repostedByMe: false, canComment: random(5) < 4, commentsCount: random(3), commentedByMe: false, viewsCount: random(100_000_000), general: random(2) == 1)
             }
             
             func generateUser() -> UserDTO {
                 let id = getUserId()
-                var userName = words.randomElement()
-                if arc4random_uniform(4) == 1 {
-                    userName += " " + words.randomElement()
+                var userName = MockServer.words.randomElement()
+                if random(4) == 1 {
+                    userName += " " + MockServer.words.randomElement()
                 }
                 let online: TimeInterval
-                if arc4random_uniform(2) == 1 {
+                if random(2) == 1 {
                     online = 0
                 } else {
-                    online = TimeInterval(arc4random_uniform(2) * 60 * 60 + arc4random_uniform(5) * 60 + arc4random_uniform(30))
+                    online = TimeInterval(random(2) * 60 * 60 + random(5) * 60 + random(30))
                 }
 
-                return UserDTO(id: id, avatar: "https://i.pravatar.cc/150?img=\(id)", username: userName, online: online, followersCount: 0, followedByMe: false, followers: [], additionalIndo: words.randomElement(), posts: [], likedPosts: [])
+                return UserDTO(id: id, avatar: "https://i.pravatar.cc/150?img=\(id)", username: userName, online: online, followersCount: 0, followedByMe: false, followers: [], additionalIndo: MockServer.words.randomElement(), posts: [], likedPosts: [])
             }
             
             self.registeredUser = []
@@ -229,7 +256,7 @@ final class MockServer {
 
             let firstUser = users.first!
             for post in posts {
-                guard arc4random_uniform(2) == 1 else { continue }
+                guard random(2) == 1 else { continue }
                 post.likesCount = post.likesCount! + 1
                 firstUser.likedPosts?.append(post.id!)
             }
@@ -246,13 +273,13 @@ final class MockServer {
                 user.likedPosts!.append(posts[0].id!)
                 
                 for post in posts.suffix(from: 1) {
-                    guard arc4random_uniform(5) == 1 else { continue }
+                    guard random(5) == 1 else { continue }
                     post.likesCount = post.likesCount! + 1
                     user.likedPosts!.append(post.id!)
                 }
                 
                 for user2 in users {
-                    guard user2.id != user.id, arc4random_uniform(3) == 1 else { continue }
+                    guard user2.id != user.id, random(3) == 1 else { continue }
                     user.followersCount = user.followersCount! + 1
                     if user.followers!.count <= 20 {
                         user.followers?.append(user2.basic())
@@ -266,6 +293,8 @@ final class MockServer {
             save()
             loggedUserId = nil
         }
+        
+        trends = (0..<10).map { _ in randomTrend() }
     }
     
     private func save() {
@@ -300,9 +329,13 @@ final class MockServer {
     }
 }
 
+fileprivate func random(_ max: Int) -> Int {
+    Int(arc4random_uniform(UInt32(max)))
+}
+
 extension Array {
     fileprivate func randomElement() -> Element {
-        self[Int(arc4random_uniform(UInt32(count)))]
+        self[random(count)]
     }
 }
 

@@ -26,8 +26,8 @@ target 'MVI-ios-test' do
   pod 'SwiftIconFont'
   
   target 'MVI-ios-testTests' do
-    inherit! :search_paths
-    # Pods for testing
+    inherit! :search_paths    
+    pod 'RxTest'
   end
 
   target 'MVI-ios-testUITests' do

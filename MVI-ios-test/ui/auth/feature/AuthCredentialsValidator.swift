@@ -14,9 +14,14 @@ struct AuthValidatorError: Error, LocalizedError, ExpressibleByStringLiteral {
     }
 }
 
-struct AuthCredentialsValidator {
-    private let network: Network
-    init(network: Network) {
+protocol AuthCredentialsValidatorType {
+    func validateIdentifier(_ value: String?, signInOrSignUp: AuthScreenState.SignInOrSignUp) -> Single<AuthValidatorError?>
+    func validatePassword(_ value: String?) -> Single<AuthValidatorError?>
+}
+
+struct AuthCredentialsValidator: AuthCredentialsValidatorType {
+    private let network: NetworkType
+    init(network: NetworkType) {
         self.network = network
     }
     

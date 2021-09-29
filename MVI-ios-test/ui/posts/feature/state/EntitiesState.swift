@@ -1,5 +1,5 @@
 //
-//  PostsStateProtocol.swift
+//  EntitiesState.swift
 //  ReduxVMSample
 //
 //  Created by ziryanov on 11.11.2020.

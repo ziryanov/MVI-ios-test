@@ -15,7 +15,7 @@ public func delayMT(_ time: Double = 0, block: @escaping () -> ()) {
 
 let container = DIContainer()
 
-@main
+//@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

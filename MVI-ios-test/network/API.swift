@@ -27,6 +27,8 @@ enum API {
 
     case likeDislike(postId: PostsContainer.ModelId, like: Bool)
     case loadUser(userId: UsersContainer.ModelId)
+    
+    case getTrends
 }
 
 extension API: TargetType {
@@ -35,37 +37,7 @@ extension API: TargetType {
     }
 
     var path: String {
-        switch self {
-        case .sessionCheck:
-            return "session_check"
-        case .checkIdentifierAvailability:
-            return "check_identifier"
-        case .signIn:
-            return "signin"
-        case .signUp:
-            return "signup"
-        case .logout:
-            return "logout"
-
-        case .getProfile:
-            return "profile"
-        case .likeDislike(_, let like):
-            return like ? "like" : "dislike"
-        case .loadUser:
-            return "user"
-        case .getFeedIds:
-            return "feed"
-        case .getInterestingIds:
-            return "interesting"
-        case .getPosts:
-            return "posts"
-        case .getFirstTwo:
-            return "posts2"
-        case .getImportantPosts:
-            return "important"
-        case .getFollowers:
-            return "followers"
-        }
+        return "path"
     }
 
     var method: Moya.Method {
@@ -123,12 +95,14 @@ extension API: TargetType {
             return MockServer.shared.getGeneralPosts(perPage: perPage, after: after)
         case .getFollowers(let userId, let perPage, let after):
             return MockServer.shared.getFollowers(userId: userId, perPage: perPage, after: after)
+        case .getTrends:
+            return MockServer.shared.getTrends()
         }
     }
 
     var task: Task {
         switch self {
-        case .sessionCheck, .logout, .getFeedIds, .getInterestingIds, .getFirstTwo, .getProfile:
+        case .sessionCheck, .logout, .getFeedIds, .getInterestingIds, .getFirstTwo, .getProfile, .getTrends:
             return .requestPlain
         case .checkIdentifierAvailability(let identifier):
             return .requestParameters(parameters: ["identifier": identifier], encoding: JSONEncoding.default)

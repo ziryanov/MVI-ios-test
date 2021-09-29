@@ -73,7 +73,7 @@ final class Post2StepFeature: EntitiesBaseFeature<Posts2StepState, Post2StepFeat
         func refresh(state: State, perPage: Int) -> Single<RefreshResult> {
             self.requestIds(state: state)
                 .flatMap { [weak self] ids -> Single<RefreshResult> in
-                    guard let self = self else { return .error(ApiError(reason: .cancelled)) }
+                    guard let self = self else { return .error(ApiError.cancelled) }
                     let needLoadIds = Array(ids.prefix(perPage))
                     return self
                         .requestModels(ids: needLoadIds)
@@ -87,9 +87,8 @@ final class Post2StepFeature: EntitiesBaseFeature<Posts2StepState, Post2StepFeat
             let needLoadIds = Array(allIds.suffix(from: indexFrom).prefix(perPage))
             return requestModels(ids: needLoadIds)
                 .map { LoadMoreResult(requestedIds: needLoadIds, loaded: $0) }
-                .delay(.seconds(1), scheduler: MainScheduler.instance)
         }
         
-        var perPage: Int = 8
+        var perPage: Int = 20
     }
 }

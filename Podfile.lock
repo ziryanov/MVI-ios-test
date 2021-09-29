@@ -36,6 +36,8 @@ PODS:
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
   - RxSwift (5.1.1)
+  - RxTest (5.1.2):
+    - RxSwift (~> 5)
   - SwiftIconFont (6.1.1)
   - SwiftLazy (1.1.9)
 
@@ -55,6 +57,7 @@ DEPENDENCIES:
   - Parchment
   - RxCocoa
   - RxSwift
+  - RxTest
   - SwiftIconFont
 
 SPEC REPOS:
@@ -63,6 +66,7 @@ SPEC REPOS:
     - FantasticSnowflake
     - Kingfisher
     - Reindeers
+    - RxTest
     - SwiftIconFont
   trunk:
     - Alamofire
@@ -110,9 +114,10 @@ SPEC CHECKSUMS:
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  RxTest: 274549b747dca56f47c52c8991ec5cf797ecfe40
   SwiftIconFont: 0a772c5ac65a40c9b0675efa37b4928158bd8e43
   SwiftLazy: 1657354f43dbd6a0a79e00ad67558d655c77bdc9
 
-PODFILE CHECKSUM: 041ab1dc50675e366330a08bc4c18c7839f321d3
+PODFILE CHECKSUM: 005f1620a6ac3fe27f8e0cc1f70de4916821d89c
 
 COCOAPODS: 1.10.1

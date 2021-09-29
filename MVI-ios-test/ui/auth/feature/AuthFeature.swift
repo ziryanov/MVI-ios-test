@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxSwift
 
 final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeature.News, AuthFeature.InnerPart> {
     
@@ -21,8 +22,8 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
     }
     
     enum News {
-        case loggedIn(Int)
-        case registered(Int)
+        case loggedIn(id: Int)
+        case registered(id: Int)
         
         enum RequestError: Swift.Error {
             case identifierValidation
@@ -33,14 +34,14 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
         case requestFailed(RequestError)
     }
     
-    init(sessionFeature: SessionFeature, network: Network, authCredentialsValidator: AuthCredentialsValidator) {
+    init<SessionFeatureConsumer: Consumer>(sessionFeatureConsumer: SessionFeatureConsumer, network: NetworkType, authCredentialsValidator: AuthCredentialsValidatorType) where SessionFeatureConsumer.Consumable == SessionFeature.Wish {
         super.init(initialState: .init(), innerPart: InnerPart(network: network, authCredentialsValidator: authCredentialsValidator))
         
         news
             .subscribe(onNext: {
                 switch $0 {
                 case .loggedIn, .registered:
-                    sessionFeature.accept(.authSuccessed)
+                    sessionFeatureConsumer.accept(.authSuccessed)
                 default:
                     break
                 }
@@ -49,9 +50,9 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
     }
     
     class InnerPart: FeatureInnerPart {
-        private let network: Network
-        private let authCredentialsValidator: AuthCredentialsValidator
-        fileprivate init(network: Network, authCredentialsValidator: AuthCredentialsValidator) {
+        private let network: NetworkType
+        private let authCredentialsValidator: AuthCredentialsValidatorType
+        fileprivate init(network: NetworkType, authCredentialsValidator: AuthCredentialsValidatorType) {
             self.network = network
             self.authCredentialsValidator = authCredentialsValidator
         }
@@ -84,29 +85,25 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             let currentState = stateHolder.state
             switch action {
             case .wish(let wish):
-                switch wish {
-                case .startRequest:
-                    return Maybe<Effect>
-                        .just(.applyWish(wish), if: !stateHolder.state.requestInProgress)
-                        .asObservable()
-                default:
-                    return .just(.applyWish(wish))
-                }
+                return Maybe<Effect>
+                    .just(.applyWish(wish), if: !stateHolder.state.requestInProgress)
+                    .asObservable()
             case .internalStartRequest:
                 let validations = validateAllFields(in: currentState)
                     .asObservable()
                     .flatMap { errors -> Observable<Effect> in
+                        let completeValidations: [Effect] = AuthScreenState.TextType.allCases.map { textType in
+                            let error = errors.first(where: { $0.textType == textType })?.validationError
+                            return Effect.completeValidation(textType, error: error)
+                        }
                         if let requestError = errors.first?.requestError {
-                            let effectsFromValidationErrors: [Effect] = errors.compactMap {
-                                guard let textType = $0.textType, let validationError = $0.validationError else { return nil }
-                                return Effect.completeValidation(textType, error: validationError)
-                            }
                             return Observable
-                                .from(effectsFromValidationErrors)
+                                .from(completeValidations)
                                 .concat(Observable.just(Effect.requestFinishedWithError(requestError)))
                                 .concat(Observable.error(requestError))
                         } else {
-                            return .empty()
+                            return Observable
+                                .from(completeValidations)
                         }
                     }
                 
@@ -201,9 +198,9 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             if case .requestFinishedWithSuccess(let id) = effect {
                 switch state.signInOrSignUp {
                 case .signIn:
-                    return .loggedIn(id)
+                    return .loggedIn(id: id)
                 case .signUp:
-                    return .registered(id)
+                    return .registered(id: id)
                 }
             }
             return nil
@@ -249,26 +246,26 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             }
         }
         
-        struct ValidateAllFieldsResult {
+        struct ValidateFieldsResult {
             let textType: AuthScreenState.TextType?
             let validationError: AuthValidatorError?
             let requestError: News.RequestError
         }
         
-        private func validateAllFields(in state: AuthScreenState) -> Single<[ValidateAllFieldsResult]> {
+        private func validateAllFields(in state: AuthScreenState) -> Single<[ValidateFieldsResult]> {
             let validateIdentifier = self.validation(of: .identifier, in: state)
-                .map { error -> ValidateAllFieldsResult? in
+                .map { error -> ValidateFieldsResult? in
                     guard error != nil else { return nil }
-                    return ValidateAllFieldsResult(textType: .identifier, validationError: error, requestError: .identifierValidation)
+                    return ValidateFieldsResult(textType: .identifier, validationError: error, requestError: .identifierValidation)
                 }
             let validatePassword = self.validation(of: .password, in: state)
-                .map { error -> ValidateAllFieldsResult? in
+                .map { error -> ValidateFieldsResult? in
                     guard error != nil else { return nil }
-                    return ValidateAllFieldsResult(textType: .password, validationError: error, requestError: .passwordValidation)
+                    return ValidateFieldsResult(textType: .password, validationError: error, requestError: .passwordValidation)
                 }
-            let validateAcceptPolicy = Single<ValidateAllFieldsResult?>.create { observer in
+            let validateAcceptPolicy = Single<ValidateFieldsResult?>.create { observer in
                 if state.signInOrSignUp == .signUp, state.acceptPolicy == false {
-                    observer(.success(ValidateAllFieldsResult(textType: nil, validationError: nil, requestError: .shouldAccepPolicy)))
+                    observer(.success(ValidateFieldsResult(textType: nil, validationError: nil, requestError: .shouldAccepPolicy)))
                 } else {
                     observer(.success(nil))
                 }
@@ -276,7 +273,7 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
             }
             return Single
                 .zip([ validateIdentifier, validatePassword, validateAcceptPolicy ])
-                .map { errors in errors.compactMap({ $0 }) }
+                .map { $0.compactMap { $0 } }
         }
         
         private func createRequest(state: AuthScreenState) -> Single<Int> {

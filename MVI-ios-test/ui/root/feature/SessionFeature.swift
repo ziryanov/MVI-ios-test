@@ -7,6 +7,7 @@
 
 import Foundation
 import Moya
+import RxSwift
 
 final class SessionFeature: BaseFeature<SessionFeature.Wish, SessionState, SessionFeature.News, SessionFeature.InnerPart> {
     enum Wish {

@@ -44,7 +44,7 @@ struct AuthScreenState {
     var identifier = Text()
     var password = Text()
     
-    enum TextType {
+    enum TextType: CaseIterable {
         case identifier, password
     }
     var editingText: TextType? = nil

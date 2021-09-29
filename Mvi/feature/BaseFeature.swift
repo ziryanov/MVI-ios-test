@@ -11,15 +11,15 @@ import RxRelay
 
 public protocol StateHolder: AnyObject {
     associatedtype State
-    
     var state: State { get }
 }
 
-public protocol Feature: Consumer, StateHolder, ObservableType where State == Element {
+public protocol NewsProvider {
     associatedtype News
-    
     var news: Observable<News> { get }
 }
+
+public protocol Feature: Consumer, StateHolder, NewsProvider, ObservableType where State == Element { }
 
 public protocol FeatureInnerPart {
     associatedtype Wish
@@ -71,6 +71,12 @@ extension FeatureInnerPart where State == Void {
     func reduce(with effect: State, state: inout State) { }
 }
 
+extension FeatureInnerPart where Wish == Void {
+    func action(from wish: Void) -> Action {
+        fatalError()
+    }
+}
+
 open class BaseFeature<Wish, State, News, InnerPart: FeatureInnerPart>: Feature where InnerPart.Wish == Wish, InnerPart.State == State, InnerPart.News == News {
     public typealias Consumable = Wish
     public typealias Element = State
@@ -96,13 +102,11 @@ open class BaseFeature<Wish, State, News, InnerPart: FeatureInnerPart>: Feature 
         self.innerPart = innerPart
         stateSubject = .init(value: initialState)
 
-        DispatchQueue.main.async {
-            innerPart.bootstrapper()
-                .subscribe(onNext: { [weak self] in
-                    self?.startActor(with: $0)
-                })
-                .disposed(by: self.disposeBag)
-        }
+        innerPart.bootstrapper().delay(.milliseconds(0), scheduler: RxHolder.mainScheduler)
+            .subscribe(onNext: { [weak self] in
+                self?.startActor(with: $0)
+            })
+            .disposed(by: self.disposeBag)
     }
     
     private func startActor(with action: InnerPart.Action) {

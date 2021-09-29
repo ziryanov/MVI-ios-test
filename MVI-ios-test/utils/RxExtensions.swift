@@ -47,7 +47,7 @@ extension Observable {
     }
 }
 
-extension Maybe {
+extension PrimitiveSequence where Trait == MaybeTrait {
     static func createSimple(_ block: @escaping () -> Element?) -> Maybe<Element> {
         return Maybe<Element>.create { observer in
             if let value = block() {
@@ -55,6 +55,15 @@ extension Maybe {
             } else {
                 observer(.completed)
             }
+            return Disposables.create()
+        }
+    }
+}
+
+extension PrimitiveSequence where Trait == SingleTrait {
+    static func createSimple(_ block: @escaping () -> Element) -> Single<Element> {
+        return Single<Element>.create { observer in
+            observer(.success(block()))
             return Disposables.create()
         }
     }

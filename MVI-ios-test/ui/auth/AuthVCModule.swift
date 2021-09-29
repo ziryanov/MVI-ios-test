@@ -77,9 +77,13 @@ enum AuthVCModule {
     final class DI: DIPart {
         static func load(container: DIContainer) {
             container.register (AuthCredentialsValidator.init)
+                .as(AuthCredentialsValidatorType.self)
                 .lifetime(.objectGraph)
-            container.register (AuthFeature.init)
-                .lifetime(.objectGraph)
+            container.register { (n: NetworkType, acv: AuthCredentialsValidatorType) -> AuthFeature in
+                let sessionFeature: SessionFeature = container.resolve()
+                return AuthFeature.init(sessionFeatureConsumer: sessionFeature, network: n, authCredentialsValidator: acv)
+            }
+            .lifetime(.objectGraph)
         }
     }
 }
