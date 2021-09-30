@@ -14,12 +14,17 @@ public protocol StateHolder: AnyObject {
     var state: State { get }
 }
 
+public protocol WishConsumer {
+    associatedtype Wish
+    func accept(wish: Wish)
+}
+
 public protocol NewsProvider {
     associatedtype News
     var news: Observable<News> { get }
 }
 
-public protocol Feature: Consumer, StateHolder, NewsProvider, ObservableType where State == Element { }
+public protocol Feature: WishConsumer, StateHolder, NewsProvider, ObservableType where State == Element { }
 
 public protocol FeatureInnerPart {
     associatedtype Wish
@@ -78,7 +83,6 @@ extension FeatureInnerPart where Wish == Void {
 }
 
 open class BaseFeature<Wish, State, News, InnerPart: FeatureInnerPart>: Feature where InnerPart.Wish == Wish, InnerPart.State == State, InnerPart.News == News {
-    public typealias Consumable = Wish
     public typealias Element = State
     
     public var state: State {
@@ -89,7 +93,7 @@ open class BaseFeature<Wish, State, News, InnerPart: FeatureInnerPart>: Feature 
         newsSubject.asObservable()
     }
     
-    public func accept(_ wish: Wish) {
+    public func accept(wish: Wish) {
         startActor(with: innerPart.action(from: wish))
     }
 

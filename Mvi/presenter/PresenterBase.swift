@@ -13,39 +13,26 @@ public protocol Presenter {
     func unsubscribe()
 }
 
-open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & PresenterHolder & AnyObject, PresenterFeature: Feature>: Presenter where View.Consumable == PresenterFeature.News {
+open class PresenterBase<View: PropsReceiver & ActionsReceiver & WishConsumer & PresenterHolder & AnyObject, PresenterFeature: Feature>: Presenter where View.Wish == PresenterFeature.News {
 
     public typealias State = PresenterFeature.Element
 
     public let feature: PresenterFeature
-    
-    public static func createAndReturnView(with feature: PresenterFeature) -> View {
-        let presenter = self.init(feature: feature)
-        return presenter.createVC()
-    }
-
-    private let disposeBag = DisposeBag()
-    required public init(feature: PresenterFeature) {
+    private var disposeBag = DisposeBag()
+    required public init(feature: PresenterFeature, view: View) {
         self.feature = feature
+        self.view = view
+        self.view._presenter = self
+        feature.news
+            .observeOn(RxHolder.mainScheduler)
+            .subscribe(onNext: { [weak self] in
+                self?.view?.accept(wish: $0)
+            })
+            .disposed(by: disposeBag)
     }
     
     internal weak var view: View!
     
-    private func createVC() -> View {
-        var view = _createView()
-        view._presenter = self
-        self.view = view
-
-        feature.news
-            .observeOn(RxHolder.mainScheduler)
-            .subscribe(onNext: { [weak self] in
-                self?.view?.accept($0)
-            })
-            .disposed(by: disposeBag)
-        
-        return view
-    }
-
     private var subscribeDB = DisposeBag()
     public func subscribe() {
         unsubscribe()
@@ -81,15 +68,12 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & Consumer & Pres
     open func _actions(for state: State) -> View.Actions {
         fatalError("need implement")
     }
-
-    open func _createView() -> View {
-        fatalError("need implement")
-    }
 }
 
-import UIKit
 extension PresenterBase where View: UIViewController {
-    public var viewController: UIViewController? {
-        return view
+    static func createAndReturnView(with feature: PresenterFeature) -> UIViewController {
+        let vc = View.controllerFromStoryboard()
+        let presenter = self.init(feature: feature, view: vc)
+        return presenter.view
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import DeclarativeTVC
 
-public class TVC<Consumable>: DeclarativeTVC, PropsReceiver, ActionsReceiver, Consumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
+public class TVC<Wish>: DeclarativeTVC, PropsReceiver, ActionsReceiver, WishConsumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
     public struct Props {
         let tableModel: TableModel
         let refreshing: Bool
@@ -77,7 +77,7 @@ public class TVC<Consumable>: DeclarativeTVC, PropsReceiver, ActionsReceiver, Co
     }
     
     //to override
-    open func accept(_ t: Consumable) {}
+    open func accept(wish: Wish) {}
 }
 
 extension UITableView {

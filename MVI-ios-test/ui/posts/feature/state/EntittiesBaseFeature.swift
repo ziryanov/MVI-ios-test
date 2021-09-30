@@ -48,7 +48,7 @@ class EntitiesBaseFeature<State, Requester: EntitiesRequester>: BaseFeature<Tabl
         if containerFeature != nil {
             news
                 .subscribe(onNext: { [weak containerFeature] in
-                    containerFeature?.accept(.init(updated: $0.loadedModels, updater: innerPart))
+                    containerFeature?.accept(wish: .init(updated: $0.loadedModels, updater: innerPart))
                 })
                 .disposed(by: disposeBag)
         }

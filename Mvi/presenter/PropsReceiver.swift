@@ -32,7 +32,7 @@ public protocol PropsReceiverWithSubscriptionBehaviour {
     var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour { get }
 }
 
-open class VC<Props, Actions, Consumable>: UIViewController, PropsReceiver, ActionsReceiver, Consumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
+open class VC<Props, Actions, Wish>: UIViewController, PropsReceiver, ActionsReceiver, WishConsumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
     public var _presenter: Presenter!
     
     open var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
@@ -66,5 +66,5 @@ open class VC<Props, Actions, Consumable>: UIViewController, PropsReceiver, Acti
     //to override
     open func render(props: Props) { }
     open func apply(actions: Actions) { }
-    open func accept(_ t: Consumable) { }
+    open func accept(wish: Wish) { }
 }

@@ -29,7 +29,7 @@ struct Router {
             return RootVCModule.Presenter.createAndReturnView(with: feature)
         case .auth:
             let feature: AuthFeature = container.resolve()
-            return AuthVCModule.Presenter.createAndReturnView(with: feature)
+            return AuthVCModule.Presenter<AuthVC>.createAndReturnView(with: feature)
         case .mainTabs:
             return MainTabsVC.controllerFromStoryboard()
         case .generalPosts:

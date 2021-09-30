@@ -30,10 +30,10 @@ final class UserFeature: BaseFeature<UserFeature.Wish, UserState, UserFeature.Ne
                 .subscribe(onNext: { [weak postsContainerFeature, weak usersContainerFeature] in
                     switch $0 {
                     case .loadedUser(let user, let posts):
-                        usersContainerFeature?.accept(.init(updated: [user], updater: innerPart))
-                        postsContainerFeature?.accept(.init(updated: posts, updater: innerPart))
+                        usersContainerFeature?.accept(wish: .init(updated: [user], updater: innerPart))
+                        postsContainerFeature?.accept(wish: .init(updated: posts, updater: innerPart))
                     case .loadedPosts(let posts):
-                        postsContainerFeature?.accept(.init(updated: posts, updater: innerPart))
+                        postsContainerFeature?.accept(wish: .init(updated: posts, updater: innerPart))
                     }
                 })
                 .disposed(by: disposeBag)

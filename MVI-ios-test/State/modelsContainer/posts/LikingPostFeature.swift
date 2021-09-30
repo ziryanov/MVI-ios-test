@@ -44,7 +44,7 @@ class LikingPostFeature: BaseFeature<LikingPostFeature.LikeOrDislikeWish, Liking
         
         news
             .subscribe(onNext: {
-                containerFeature.accept(.init(updated: [$0.updatedModel], updater: innerPart))
+                containerFeature.accept(wish: .init(updated: [$0.updatedModel], updater: innerPart))
             })
             .disposed(by: disposeBag)
     }

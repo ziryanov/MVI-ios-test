@@ -13,10 +13,6 @@ enum RootVCModule {
     typealias Props = Void
 
     final class Presenter: PresenterBase<ViewController, RouterFeature> {
-        override func _createView() -> ViewController {
-            return ViewController.controllerFromStoryboard()
-        }
-        
         override func _props(for state: State) -> Props { () }
         override func _actions(for state: State) -> ViewController.Actions { () }
     }

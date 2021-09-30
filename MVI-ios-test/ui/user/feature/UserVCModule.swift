@@ -13,9 +13,6 @@ enum UserVCModule {
     typealias ViewController = UserVC
     
     class Presenter: PresenterBase<ViewController, UserFeature> {
-        override func _createView() -> ViewController {
-            return ViewController.controllerFromStoryboard()
-        }
         
         private let likingPostFeature: LikingPostFeature = container.resolve()
         private let routerFeature: RouterFeature = container.resolve()
@@ -35,7 +32,7 @@ enum UserVCModule {
                 }))
                 if !user.followers.isEmpty {
                     rows.append(UserFollowersCellVM(users: user.followers, userPressed: CommandWith<UsersContainer.BasicUserInfo>(action: { [unowned routerFeature] in
-                        routerFeature.accept(.push(.user($0)))
+                        routerFeature.accept(wish: .push(.user($0)))
                     })))
                 }
                 
@@ -43,7 +40,7 @@ enum UserVCModule {
                 let index = segments.firstIndex(of: state.currentSegment)!
                 let names = segments.map { "\($0.title) \(user.postIds(for: $0).count)" }
                 rows.append(SegmentedCellVM(segments: names, selectedIndex: index, changeSegment: CommandWith<Int>() { [unowned feature] in
-                    feature.accept(.changeSegment(segments[$0]))
+                    feature.accept(wish: .changeSegment(segments[$0]))
                 }))
                 
                 let posts = state.loadedPosts[state.currentSegment]
@@ -53,10 +50,10 @@ enum UserVCModule {
                 rows.append(contentsOf: posts.map { post in
                     PostCellVM(post: post,
                                userPressed: Command(action: { [unowned routerFeature] in
-                                routerFeature.accept(.push(.user(post.userBasic)))
+                                routerFeature.accept(wish: .push(.user(post.userBasic)))
                                }),
                                likePressed: Command(action: { [unowned likingPostFeature] in
-                                likingPostFeature.accept(.init(model: post))
+                                likingPostFeature.accept(wish: .init(model: post))
                                }),
                                commentPressed: Command(action: {}),
                                repostPressed: Command(action: {}),
@@ -76,10 +73,10 @@ enum UserVCModule {
         override func _actions(for state: State) -> ViewController.Actions {
             .init(
                 refresh: Command(action: { [unowned feature] in
-                    feature.accept(.refresh)
+                    feature.accept(wish: .refresh)
                 }),
                 loadMore: Command(action: { [unowned feature] in
-                    feature.accept(.loadMore)
+                    feature.accept(wish: .loadMore)
                 }))
         }
     }

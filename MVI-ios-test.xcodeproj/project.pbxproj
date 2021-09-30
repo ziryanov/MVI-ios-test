@@ -14,7 +14,6 @@
 		6103B58B26A304CE00CD6A50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6103B58A26A304CE00CD6A50 /* Assets.xcassets */; };
 		6103B58E26A304CE00CD6A50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6103B58C26A304CE00CD6A50 /* LaunchScreen.storyboard */; };
 		6103B5A426A304CF00CD6A50 /* MVI_ios_testUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103B5A326A304CF00CD6A50 /* MVI_ios_testUITests.swift */; };
-		6103B60926A31B0100CD6A50 /* Consumer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103B60826A31B0100CD6A50 /* Consumer.swift */; };
 		6103B61226A31C9000CD6A50 /* BaseFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6103B61126A31C9000CD6A50 /* BaseFeature.swift */; };
 		6106CC6126C414CD00643A6C /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6106CC5F26C414CC00643A6C /* PostCell.swift */; };
 		6106CC6226C414CD00643A6C /* PostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6106CC6026C414CD00643A6C /* PostCell.xib */; };
@@ -144,7 +143,6 @@
 		6103B59F26A304CF00CD6A50 /* MVI-ios-testUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MVI-ios-testUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6103B5A326A304CF00CD6A50 /* MVI_ios_testUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MVI_ios_testUITests.swift; sourceTree = "<group>"; };
 		6103B5A526A304CF00CD6A50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6103B60826A31B0100CD6A50 /* Consumer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Consumer.swift; sourceTree = "<group>"; };
 		6103B61126A31C9000CD6A50 /* BaseFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseFeature.swift; sourceTree = "<group>"; };
 		6106CC5F26C414CC00643A6C /* PostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		6106CC6026C414CD00643A6C /* PostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostCell.xib; sourceTree = "<group>"; };
@@ -338,18 +336,9 @@
 			isa = PBXGroup;
 			children = (
 				6103B61026A31C8600CD6A50 /* feature */,
-				6103B5FF26A31A6E00CD6A50 /* element */,
 				6199E39926B6A0D400FACDBD /* presenter */,
 			);
 			path = Mvi;
-			sourceTree = "<group>";
-		};
-		6103B5FF26A31A6E00CD6A50 /* element */ = {
-			isa = PBXGroup;
-			children = (
-				6103B60826A31B0100CD6A50 /* Consumer.swift */,
-			);
-			path = element;
 			sourceTree = "<group>";
 		};
 		6103B61026A31C8600CD6A50 /* feature */ = {
@@ -1103,7 +1092,6 @@
 				6106CC6126C414CD00643A6C /* PostCell.swift in Sources */,
 				6103B61226A31C9000CD6A50 /* BaseFeature.swift in Sources */,
 				617FB88326BFCAB200E51D11 /* ModelsContainerFeature.swift in Sources */,
-				6103B60926A31B0100CD6A50 /* Consumer.swift in Sources */,
 				6106CC6726C4157700643A6C /* PostsVCModule.swift in Sources */,
 				61C6E45D26B31320002D695B /* AuthFeature.swift in Sources */,
 				6103B58626A304CB00CD6A50 /* RootVC.swift in Sources */,

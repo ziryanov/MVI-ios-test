@@ -34,10 +34,6 @@ enum AVCModule {
     typealias Props = Int
 
     final class Presenter: PresenterBase<ViewController, AFeature> {
-        override func _createView() -> ViewController {
-            return ViewController.controllerFromStoryboard()
-        }
-        
         override func _props(for state: State) -> ViewController.Props { state }
         override func _actions(for state: State) -> ViewController.Actions { state }
     }
@@ -69,10 +65,6 @@ enum BVCModule {
     typealias Props = Int
 
     final class Presenter: PresenterBase<ViewController, AFeature> {
-        override func _createView() -> ViewController {
-            return ViewController()
-        }
-        
         override func _props(for state: State) -> ViewController.Props { state }
         override func _actions(for state: State) -> ViewController.Actions { state }
     }

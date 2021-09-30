@@ -11,8 +11,6 @@ import DITranquillity
 
 enum AuthVCModule {
 
-    typealias ViewController = AuthVC
-
     struct Props {
         let identifier: String
         let identifierError: String?
@@ -36,11 +34,7 @@ enum AuthVCModule {
         let startRequest: Command
     }
 
-    final class Presenter: PresenterBase<ViewController, AuthFeature> {
-        
-        override func _createView() -> ViewController {
-            return ViewController.controllerFromStoryboard()
-        }
+    class Presenter<View: PropsReceiver & ActionsReceiver & WishConsumer & PresenterHolder & AnyObject>: PresenterBase<View, AuthFeature>  where View.Wish == AuthFeature.News, View.Props == Props, View.Actions == Actions {
         
         override func _props(for state: State) -> Props {
             Props(identifier: state.identifier.value,
@@ -54,22 +48,22 @@ enum AuthVCModule {
         
         override func _actions(for state: State) -> Actions {
             Actions(changeSegment: .init { [unowned feature] in
-                feature.accept(.changeSignInOrSignUp($0))
+                feature.accept(wish: .changeSignInOrSignUp($0))
             },
             startInput: .init { [unowned feature] in
-                feature.accept(.startInput($0))
+                feature.accept(wish: .startInput($0))
             },
             endInput: .init { [unowned feature] in
-                feature.accept(.finishInput)
+                feature.accept(wish: .finishInput)
             },
             changeValue: .init { [unowned feature] in
-                feature.accept(.changeInput($0.0, $0.1))
+                feature.accept(wish: .changeInput($0.0, $0.1))
             },
             togglePolicy: .init { [unowned feature] in
-                feature.accept(.toggleAcceptPolicy)
+                feature.accept(wish: .toggleAcceptPolicy)
             },
             startRequest: .init { [unowned feature] in
-                feature.accept(.startRequest)
+                feature.accept(wish: .startRequest)
             })
         }
     }
@@ -81,9 +75,17 @@ enum AuthVCModule {
                 .lifetime(.objectGraph)
             container.register { (n: NetworkType, acv: AuthCredentialsValidatorType) -> AuthFeature in
                 let sessionFeature: SessionFeature = container.resolve()
-                return AuthFeature.init(sessionFeatureConsumer: sessionFeature, network: n, authCredentialsValidator: acv)
+                return AuthFeature.init(sessionFeatureWishConsumer: sessionFeature, network: n, authCredentialsValidator: acv)
             }
             .lifetime(.objectGraph)
         }
     }
 }
+
+//extension AuthVCModule.Presenter where View == AuthVC {
+//    static func createAndReturnView(with feature: AuthFeature) -> UIViewController {
+//        let vc = AuthVC.controllerFromStoryboard()
+//        let presenter = self.init(feature: feature, view: vc)
+//        return presenter.view
+//    }
+//}

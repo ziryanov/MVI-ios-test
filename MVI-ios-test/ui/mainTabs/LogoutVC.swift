@@ -15,6 +15,6 @@ final class LogoutVC: UIViewController {
     
     @IBAction private func logoutPressed() {
         let feature: SessionFeature = container.resolve()
-        feature.accept(.logout)
+        feature.accept(wish: .logout)
     }
 }

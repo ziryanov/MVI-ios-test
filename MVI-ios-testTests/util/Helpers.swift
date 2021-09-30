@@ -10,15 +10,15 @@ import Foundation
 import Moya
 import RxTest
 
-class FeatureMock<Consumable, News>: Consumer, NewsProvider {
+class FeatureMock<Wish, News>: WishConsumer, NewsProvider {
     let news: Observable<News>
-    let wish: ((Consumable) -> Void)?
-    init(wish: ((Consumable) -> Void)?, news: Observable<News> = .empty()) {
+    let wish: ((Wish) -> Void)?
+    init(wish: ((Wish) -> Void)?, news: Observable<News> = .empty()) {
         self.wish = wish
         self.news = news
     }
     
-    func accept(_ t: Consumable) {
+    func accept(wish: Wish) {
         wish?(t)
     }
 }

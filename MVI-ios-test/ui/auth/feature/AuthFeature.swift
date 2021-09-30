@@ -34,14 +34,14 @@ final class AuthFeature: BaseFeature<AuthFeature.Wish, AuthScreenState, AuthFeat
         case requestFailed(RequestError)
     }
     
-    init<SessionFeatureConsumer: Consumer>(sessionFeatureConsumer: SessionFeatureConsumer, network: NetworkType, authCredentialsValidator: AuthCredentialsValidatorType) where SessionFeatureConsumer.Consumable == SessionFeature.Wish {
+    init<SessionFeatureWishConsumer: WishConsumer>(sessionFeatureWishConsumer: SessionFeatureWishConsumer, network: NetworkType, authCredentialsValidator: AuthCredentialsValidatorType) where SessionFeatureWishConsumer.Wish == SessionFeature.Wish {
         super.init(initialState: .init(), innerPart: InnerPart(network: network, authCredentialsValidator: authCredentialsValidator))
         
         news
             .subscribe(onNext: {
                 switch $0 {
                 case .loggedIn, .registered:
-                    sessionFeatureConsumer.accept(.authSuccessed)
+                    sessionFeatureWishConsumer.accept(wish: .authSuccessed)
                 default:
                     break
                 }

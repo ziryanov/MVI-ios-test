@@ -38,13 +38,13 @@ class AuthFetureTest: XCTestCase {
     }
 
     func test_AuthFeature_Identifier_Validation() throws {
-        let sessionFeatureConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
+        let sessionFeatureWishConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
         let network = NetworkMock { api in .error(ApiError.cancelled) }
         
         let scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: true)
         RxHolder.mainScheduler = scheduler
         
-        let feature = AuthFeature(sessionFeatureConsumer: sessionFeatureConsumer, network: network, authCredentialsValidator: AuthCredentialsValidatorMock(scheduler: scheduler, failed: true))
+        let feature = AuthFeature(sessionFeatureWishConsumer: sessionFeatureWishConsumer, network: network, authCredentialsValidator: AuthCredentialsValidatorMock(scheduler: scheduler, failed: true))
         
         let result = scheduler.createObserver(AuthScreenState.self)
         var subscription: Disposable! = nil
@@ -82,13 +82,13 @@ class AuthFetureTest: XCTestCase {
     }
     
     func test_AuthFeature_ChangeInputValidations() throws {
-        let sessionFeatureConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
+        let sessionFeatureWishConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
         let network = NetworkMock { api in .error(ApiError.cancelled) }
         
         let scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: true)
         RxHolder.mainScheduler = scheduler
         
-        let feature = AuthFeature(sessionFeatureConsumer: sessionFeatureConsumer, network: network, authCredentialsValidator: AuthCredentialsValidatorMock(scheduler: scheduler, failed: true))
+        let feature = AuthFeature(sessionFeatureWishConsumer: sessionFeatureWishConsumer, network: network, authCredentialsValidator: AuthCredentialsValidatorMock(scheduler: scheduler, failed: true))
         
         let result = scheduler.createObserver(AuthScreenState.self)
         var subscription: Disposable! = nil
@@ -109,7 +109,7 @@ class AuthFetureTest: XCTestCase {
     }
     
     func test_AuthFeature_ValidateBeforeRequest() throws {
-        let sessionFeatureConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
+        let sessionFeatureWishConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
         let network = NetworkMock { api in .error(ApiError(reason: .internalLogicError, serverError: "server")) }
         
         let scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: true)
@@ -117,7 +117,7 @@ class AuthFetureTest: XCTestCase {
         
         let validator = AuthCredentialsValidatorMock(scheduler: scheduler, failed: false)
         validator.validIdentifier = "1"
-        let feature = AuthFeature(sessionFeatureConsumer: sessionFeatureConsumer, network: network, authCredentialsValidator: validator)
+        let feature = AuthFeature(sessionFeatureWishConsumer: sessionFeatureWishConsumer, network: network, authCredentialsValidator: validator)
 
         var subscription1: Disposable! = nil
         var subscription2: Disposable! = nil
@@ -205,7 +205,7 @@ class AuthFetureTest: XCTestCase {
         let scheduler = TestScheduler(initialClock: 0, simulateProcessingDelay: true)
         RxHolder.mainScheduler = scheduler
 
-        let sessionFeatureConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
+        let sessionFeatureWishConsumer = FeatureMock<SessionFeature.Wish, Void>(wish: { _ in })
         var signUpFail = true
         
         let network = NetworkMock { api in
@@ -231,7 +231,7 @@ class AuthFetureTest: XCTestCase {
         
         
         let validator = AuthCredentialsValidatorMock(scheduler: scheduler, failed: false)
-        let feature = AuthFeature(sessionFeatureConsumer: sessionFeatureConsumer, network: network, authCredentialsValidator: validator)
+        let feature = AuthFeature(sessionFeatureWishConsumer: sessionFeatureWishConsumer, network: network, authCredentialsValidator: validator)
 
         let disposeBag = DisposeBag()
         let newsResult = scheduler.createObserver(AuthFeature.News.self)
