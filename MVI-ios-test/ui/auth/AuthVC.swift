@@ -54,8 +54,8 @@ final class AuthVC: VC<AuthVCModule.Props, AuthVCModule.Actions, AuthFeature.New
         bottomPanel.canCancelContentTouches = false
     }
 
-    override func accept(wish: Wish) {
-        switch wish {
+    override func accept(news: AuthFeature.News) {
+        switch news {
         case .requestFailed(let error):
             switch error {
             case .identifierValidation:

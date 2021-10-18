@@ -12,14 +12,14 @@ import RxTest
 
 class FeatureMock<Wish, News>: WishConsumer, NewsProvider {
     let news: Observable<News>
-    let wish: ((Wish) -> Void)?
+    let wishBlock: ((Wish) -> Void)?
     init(wish: ((Wish) -> Void)?, news: Observable<News> = .empty()) {
-        self.wish = wish
+        self.wishBlock = wish
         self.news = news
     }
     
     func accept(wish: Wish) {
-        wish?(t)
+        wishBlock?(wish)
     }
 }
 

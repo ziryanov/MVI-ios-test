@@ -15,6 +15,7 @@ struct Router {
         case generalPosts
         case posts(source: Posts2StepSource)
         case user(UsersContainer.BasicUserInfo)
+        case trends
     }
 
     let screen: Screen
@@ -43,6 +44,9 @@ struct Router {
             container.extensions(for: UserFeature.self)?.setArgs(userBasic)
             let feature: UserFeature = container.resolve()
             return UserVCModule.Presenter.createAndReturnView(with: feature)
+        case .trends:
+            let feature: TrendsFeature = container.resolve()
+            return TrendsVCModule.Presenter.createAndReturnView(with: feature)
         }
     }
 }

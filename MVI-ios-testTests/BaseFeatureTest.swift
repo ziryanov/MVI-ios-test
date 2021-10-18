@@ -113,8 +113,8 @@ class BaseFeatureTest: XCTestCase {
         var subscription: Disposable! = nil
         
         scheduler.scheduleAt(0) { subscription = feature.subscribe(result) }
-        scheduler.scheduleAt(200) { feature.accept(.w1) }
-        scheduler.scheduleAt(300) { feature.accept(.w2) }
+        scheduler.scheduleAt(200) { feature.accept(wish: .w1) }
+        scheduler.scheduleAt(300) { feature.accept(wish: .w2) }
         
         scheduler.scheduleAt(500) {
             let bootstrapperFirstPartE3Delay = immideatlyBootstrapper ? 0 : SimpleFeature.InnerPart.bootstrapperDelay + SimpleFeature.InnerPart.delay(for: .a3)
@@ -154,8 +154,8 @@ class BaseFeatureTest: XCTestCase {
         var subscription: Disposable! = nil
         
         scheduler.scheduleAt(0) { subscription = feature.news.subscribe(result) }
-        scheduler.scheduleAt(200) { feature.accept(.w1) }
-        scheduler.scheduleAt(300) { feature.accept(.w2) }
+        scheduler.scheduleAt(200) { feature.accept(wish: .w1) }
+        scheduler.scheduleAt(300) { feature.accept(wish: .w2) }
         
         scheduler.scheduleAt(500) {
             let bootstrapperFirstPartE3Delay = immideatlyBootstrapper ? 0 : SimpleFeature.InnerPart.bootstrapperDelay + SimpleFeature.InnerPart.delay(for: .a3)

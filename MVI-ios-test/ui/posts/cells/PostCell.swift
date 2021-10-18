@@ -25,16 +25,48 @@ final class PostCell: XibTableViewCell {
     @IBOutlet fileprivate var comments: UIButton!
     @IBOutlet fileprivate var reposts: UIButton!
     @IBOutlet fileprivate var views: UILabel!
+    
+    fileprivate var actions: PostCellActions!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        header.rx.controlEvent(.touchUpInside)
+            .bind { [unowned self] _ in
+                self.actions.userPressed.perform()
+            }
+            .disposed(by: rx.disposeBag)
+        
+        likes.rx.controlEvent(.touchUpInside)
+            .bind { [unowned self] _ in
+                self.actions.likePressed.perform()
+            }
+            .disposed(by: rx.disposeBag)
+
+        comments.rx.controlEvent(.touchUpInside)
+            .bind { [unowned self] _ in
+                self.actions.commentPressed.perform()
+            }
+            .disposed(by: rx.disposeBag)
+
+        reposts.rx.controlEvent(.touchUpInside)
+            .bind { [unowned self] _ in
+                self.actions.repostPressed.perform()
+            }
+            .disposed(by: rx.disposeBag)
+    }
 }
 
-struct PostCellVM: CellModel, SelectableCellModel {
-    let post: PostsContainer.Post
-    
+struct PostCellActions: Equatable, Hashable {
     let userPressed: Command
     let likePressed: Command
     let commentPressed: Command
     let repostPressed: Command
-    
+}
+
+struct PostCellVM: CellModel, SelectableCellModel {
+    let post: PostsContainer.Post
+    let actions: PostCellActions
     let selectCommand: Command
 
     func apply(to cell: PostCell, containerView: UIScrollView) {
@@ -56,29 +88,7 @@ struct PostCellVM: CellModel, SelectableCellModel {
         
         cell.views.text = post.viewsCount.shortText
         
-        cell.header.rx.controlEvent(.touchUpInside)
-            .bind { [userPressed] _ in
-                userPressed.perform()
-            }
-            .disposed(by: cell.rx.disposeBag(tag: "header"))
-        
-        cell.likes.rx.controlEvent(.touchUpInside)
-            .bind { [likePressed] _ in
-                likePressed.perform()
-            }
-            .disposed(by: cell.rx.disposeBag(tag: "likes"))
-//
-//        cell.comments.rx.controlEvent(.touchUpInside)
-//            .bind { [commentPressed] _ in
-//                commentPressed.perform()
-//            }
-//            .disposed(by: cell.rx.disposeBag(tag: "comments"))
-//
-//        cell.reposts.rx.controlEvent(.touchUpInside)
-//            .bind { [repostPressed] _ in
-//                repostPressed.perform()
-//            }
-//            .disposed(by: cell.rx.disposeBag(tag: "repost"))
+        cell.actions = actions
     }
     
     private func setBody(to cell: PostCell) {

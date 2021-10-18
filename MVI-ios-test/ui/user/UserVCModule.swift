@@ -66,8 +66,8 @@ enum UserVCModule {
                 rows.append(LoadingCellVM())
             }
             
-            return TVC.Props(tableModel: TableModel(rows: rows),
-                             refreshing: state.currentState == .refreshing)
+            return .init(tableModel: TableModel(rows: rows),
+                         refreshing: state.currentState == .refreshing)
             }
         
         override func _actions(for state: State) -> ViewController.Actions {

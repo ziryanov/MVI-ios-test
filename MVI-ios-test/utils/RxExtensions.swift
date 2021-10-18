@@ -38,10 +38,15 @@ extension Maybe {
 }
 
 extension Observable {
-    static func createSimple(_ block: @escaping () -> Element) -> Observable<Element> {
+    static func createSimple(_ block: @escaping () throws -> Element) -> Observable<Element> {
         return Observable<Element>.create { observer in
-            observer.onNext(block())
-            observer.onCompleted()
+            do {
+                observer.onNext(try block())
+                observer.onCompleted()
+            } catch {
+                observer.onError(error)
+            }
+            
             return Disposables.create()
         }
     }
@@ -61,9 +66,13 @@ extension PrimitiveSequence where Trait == MaybeTrait {
 }
 
 extension PrimitiveSequence where Trait == SingleTrait {
-    static func createSimple(_ block: @escaping () -> Element) -> Single<Element> {
+    static func createSimple(_ block: @escaping () throws -> Element) -> Single<Element> {
         return Single<Element>.create { observer in
-            observer(.success(block()))
+            do {
+                observer(.success(try block()))
+            } catch {
+                observer(.error(error))
+            }
             return Disposables.create()
         }
     }

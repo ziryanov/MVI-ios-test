@@ -23,13 +23,17 @@ final class MainTabsVC: UITabBarController {
         let router2 = Router(screen: .generalPosts)
         let vc2 = router2.craeteViewController()
         
-        let vc3 = LogoutVC.controllerFromStoryboard()
+        let routerTrends = Router(screen: .trends)
+        let vcTrends = routerTrends.craeteViewController()
         
-        viewControllers = [vc1.wrapInNVC(), vc2.wrapInNVC(), vc3.wrapInNVC()]
+        let vcLogout = LogoutVC.controllerFromStoryboard()
+        
+        viewControllers = [vc1.wrapInNVC(), vc2.wrapInNVC(), vcTrends.wrapInNVC(), vcLogout.wrapInNVC()]
         
         let iconSize = CGSize(width: 25, height: 25)
         let icons = [ UIImage(named: "tab.feed"),
                       UIImage(from: .fontAwesome5Solid, code: "rss-square", size: iconSize),
+                      UIImage(from: .fontAwesome5Solid, code: "poll", size: iconSize),
                       UIImage(named: "tab.settings") ]
         tabBar.items?.enumerated().forEach {
             $0.1.image = icons[$0.0]

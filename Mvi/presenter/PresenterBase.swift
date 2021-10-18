@@ -13,7 +13,12 @@ public protocol Presenter {
     func unsubscribe()
 }
 
-open class PresenterBase<View: PropsReceiver & ActionsReceiver & WishConsumer & PresenterHolder & AnyObject, PresenterFeature: Feature>: Presenter where View.Wish == PresenterFeature.News {
+public protocol NewsConsumer {
+    associatedtype News
+    func accept(news: News)
+}
+
+open class PresenterBase<View: PropsReceiver & ActionsReceiver & NewsConsumer & PresenterHolder & AnyObject, PresenterFeature: Feature>: Presenter where View.News == PresenterFeature.News {
 
     public typealias State = PresenterFeature.Element
 
@@ -23,10 +28,11 @@ open class PresenterBase<View: PropsReceiver & ActionsReceiver & WishConsumer & 
         self.feature = feature
         self.view = view
         self.view._presenter = self
+        
         feature.news
             .observeOn(RxHolder.mainScheduler)
             .subscribe(onNext: { [weak self] in
-                self?.view?.accept(wish: $0)
+                self?.view?.accept(news: $0)
             })
             .disposed(by: disposeBag)
     }

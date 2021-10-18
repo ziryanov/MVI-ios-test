@@ -11,20 +11,26 @@ import RxSwift
 final class TrendsFeature: BaseFeature<Void, TrendsFeature.State, Void, TrendsFeature.InnerPart> {
     
     struct State {
-        struct Trend {
+        typealias UpdateTime = Int
+        struct Trend: Equatable, Hashable {
             let id: String
             let name: String
             let position: Int
-            let previousPosition: (Int, changedOnUpdateId: Int)?
+            struct PreviousPosition: Equatable, Hashable {
+                let position: Int
+                let updateTime: UpdateTime
+            }
+            let previous: PreviousPosition?
             
             static fileprivate func unknown(position: Int) -> Trend {
-                Trend(id: UUID().uuidString, name: "unknown", position: 0, previousPosition: nil)
+                Trend(id: UUID().uuidString, name: "unknown", position: position, previous: nil)
             }
-            static let previousPositionsStayedTicks = 4
+            static let previousPositionsStayedTime: UpdateTime = 4
         }
         var trends = [Trend]()
         
-        var lastUpdatedId = -1
+        var lastUpdateTime: UpdateTime = -1
+        var currentUpdateTime: UpdateTime = -1
     }
     
     init(network: NetworkType) {
@@ -41,53 +47,62 @@ final class TrendsFeature: BaseFeature<Void, TrendsFeature.State, Void, TrendsFe
         typealias News = Void
         typealias State = TrendsFeature.State
         enum Action {
-            case update(id: Int)
+            case update(time: State.UpdateTime)
         }
         enum Effect {
-            case update([State.Trend], updateId: Int)
+            case updateCurrentTime(State.UpdateTime)
+            case update([State.Trend], updateTime: State.UpdateTime)
         }
         
         func bootstrapper() -> Observable<Action> {
-            Observable<Int>
-                .timer(.seconds(0), period: .seconds(1), scheduler: RxHolder.mainScheduler) //if change period be care about int overflow
-                .map { .update(id: $0) }
+            let period = DispatchTimeInterval.seconds(1) //if change period be care about int overflow in timer
+            let koeff = 1
+            return Observable<Int>
+                .timer(.seconds(0), period: period, scheduler: RxHolder.mainScheduler)
+                .map { .update(time: koeff * $0) }
         }
                 
         func actor<Holder>(from action: Action, stateHolder: Holder) -> Observable<Effect> where Holder : StateHolder, State == Holder.State {
             switch action {
-            case let .update(updateId):
-                return getTrends()
+            case let .update(updateTime):
+                let updateCurrentTime = Observable<Effect>.just(.updateCurrentTime(updateTime))
+                let request = getTrends()
                     .flatMapMaybe { [weak stateHolder] trends -> Maybe<Effect> in
-                        guard let state = stateHolder?.state, state.lastUpdatedId < updateId else {
+                        guard let state = stateHolder?.state, state.lastUpdateTime < updateTime else {
                             return .empty()
                         }
                         let updated = trends.enumerated().map { (index, dto) -> State.Trend in
+                            let newPosition = index + 1
                             guard let id = dto.id,
                                   let name = dto.name else {
-                                return .unknown(position: index)
+                                return .unknown(position: newPosition)
                             }
-                            var previousPosition: (Int, changedOnUpdateId: Int)? = nil
-                            if let previous = state.trends.first(where: { $0.id == id }) {
-                                if let prevPreviousPosition = previous.previousPosition, updateId - prevPreviousPosition.changedOnUpdateId <= State.Trend.previousPositionsStayedTicks {
-                                    previousPosition = prevPreviousPosition
+                            let previous: State.Trend.PreviousPosition?
+                            if let old = state.trends.first(where: { $0.id == id }) {
+                                if newPosition == old.position, let previousPrevious = old.previous, previousPrevious.position != newPosition, previousPrevious.updateTime >= updateTime - State.Trend.previousPositionsStayedTime {
+                                    previous = previousPrevious
                                 } else {
-                                    previousPosition = (previous.position, updateId)
+                                    previous = .init(position: old.position, updateTime: updateTime)
                                 }
+                            } else {
+                                previous = nil
                             }
-                            return .init(id: id, name: name, position: index, previousPosition: previousPosition)
+                            return .init(id: id, name: name, position: newPosition, previous: previous)
                         }
-                        
-                        return .just(.update(updated, updateId: updateId))
+                        return .just(.update(updated, updateTime: updateTime))
                     }
                     .asObservable()
+                return Observable<Effect>.concat([updateCurrentTime, request])
             }
         }
 
         func reduce(with effect: Effect, state: inout State) {
             switch effect {
-            case let .update(trends, updatedId):
+            case let .update(trends, updateTime):
                 state.trends = trends
-                state.lastUpdatedId = updatedId
+                state.lastUpdateTime = updateTime
+            case let .updateCurrentTime(currentTime):
+                state.currentUpdateTime = currentTime
             }
         }
         

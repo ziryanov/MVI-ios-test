@@ -1,14 +1,14 @@
 //
-//  TVC.swift
+//  DTVC.swift
 //  MVI-ios-test
 //
-//  Created by ziryanov on 11.08.2021.
+//  Created by ziryanov on 05.10.2021.
 //
 
-import Foundation
+import UIKit
 import DeclarativeTVC
 
-public class TVC<Wish>: DeclarativeTVC, PropsReceiver, ActionsReceiver, WishConsumer, PresenterHolder, PropsReceiverWithSubscriptionBehaviour {
+open class DefaultTVC<News>: TVC<DefaultTVC.Props, DefaultTVC.Actions, News> {
     public struct Props {
         let tableModel: TableModel
         let refreshing: Bool
@@ -19,36 +19,7 @@ public class TVC<Wish>: DeclarativeTVC, PropsReceiver, ActionsReceiver, WishCons
         let loadMore: Command
     }
     
-    public var _presenter: Presenter!
-    open var subscriptionBehaviour: PropsReceiverSubscriptionBehaviour {
-        return .onAppearing
-    }
-
-    open override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if subscriptionBehaviour == .always {
-            _presenter.subscribe()
-        }
-    }
-    
-    open override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-
-        if subscriptionBehaviour == .onAppearing {
-            _presenter.subscribe()
-        }
-    }
-
-    open override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        if subscriptionBehaviour == .onAppearing {
-            _presenter.unsubscribe()
-        }
-    }
-    
-    public func render(props: Props) {
+    public override func render(props: Props) {
         set(model: props.tableModel, animations: nil)
         
         if props.refreshing != refreshControl?.isRefreshing {
@@ -60,7 +31,7 @@ public class TVC<Wish>: DeclarativeTVC, PropsReceiver, ActionsReceiver, WishCons
         }
     }
     
-    public func apply(actions: Actions) {
+    public override func apply(actions: Actions) {
         tableView.rx.willDisplayCell
             .bind { [action = actions.loadMore, unowned tableView] (_, ip) in
                 if tableView!.distanceToEnd(from: ip) < 5 {
@@ -75,9 +46,6 @@ public class TVC<Wish>: DeclarativeTVC, PropsReceiver, ActionsReceiver, WishCons
             }
             .disposed(by: rx.disposeBag(tag: "Refresh"))
     }
-    
-    //to override
-    open func accept(wish: Wish) {}
 }
 
 extension UITableView {

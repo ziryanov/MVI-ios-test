@@ -16,7 +16,7 @@ class UI_DI: DIPart {
         container.append(part: AuthVCModule.DI.self)
         container.append(part: PostsVCModule.DI.self)
         container.append(part: UserVCModule.DI.self)
-//        container.append(part: ParchmentVCModule.DI.self)
+        container.append(part: TrendsVCModule.DI.self)
 //        container.append(part: UsersListVCModule.DI.self)
     }
 }

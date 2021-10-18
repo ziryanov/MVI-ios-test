@@ -82,6 +82,15 @@
 		619ECF6826A6E20200D37B86 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF6426A6E20200D37B86 /* SessionState.swift */; };
 		619ECF7326A6E24300D37B86 /* UserDefault.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF7226A6E24300D37B86 /* UserDefault.swift */; };
 		619ECF7826A6E2A000D37B86 /* SessionFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619ECF7726A6E2A000D37B86 /* SessionFeature.swift */; };
+		619F071E270C6BC600D8A6DF /* VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F071D270C6BC600D8A6DF /* VC.swift */; };
+		619F0721270C6C2C00D8A6DF /* DefaultTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F0720270C6C2C00D8A6DF /* DefaultTVC.swift */; };
+		619F0723270C7C7D00D8A6DF /* TrendsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F0722270C7C7D00D8A6DF /* TrendsVC.swift */; };
+		619F0725270C7C8A00D8A6DF /* TrendsVCModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F0724270C7C8A00D8A6DF /* TrendsVCModule.swift */; };
+		619F0727270C7C9400D8A6DF /* Trends.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 619F0726270C7C9300D8A6DF /* Trends.storyboard */; };
+		619F072B270C7DFB00D8A6DF /* TrendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F072A270C7DFB00D8A6DF /* TrendsCell.swift */; };
+		619F0731270CA4C300D8A6DF /* DeclarativeTVC+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F0730270CA4C300D8A6DF /* DeclarativeTVC+.swift */; };
+		619F0733270CA76000D8A6DF /* SeparatorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619F0732270CA76000D8A6DF /* SeparatorCell.swift */; };
+		619F0735270CA76D00D8A6DF /* SeparatorCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 619F0734270CA76C00D8A6DF /* SeparatorCell.xib */; };
 		61AAAD5726F3770D0076ED38 /* LikingPostFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD5626F3770D0076ED38 /* LikingPostFeature.swift */; };
 		61AAAD6026F48F9C0076ED38 /* UserState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD5F26F48F9C0076ED38 /* UserState.swift */; };
 		61AAAD6226F4908D0076ED38 /* UserFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61AAAD6126F4908D0076ED38 /* UserFeature.swift */; };
@@ -212,6 +221,15 @@
 		619ECF6426A6E20200D37B86 /* SessionState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionState.swift; sourceTree = "<group>"; };
 		619ECF7226A6E24300D37B86 /* UserDefault.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefault.swift; sourceTree = "<group>"; };
 		619ECF7726A6E2A000D37B86 /* SessionFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFeature.swift; sourceTree = "<group>"; };
+		619F071D270C6BC600D8A6DF /* VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VC.swift; sourceTree = "<group>"; };
+		619F0720270C6C2C00D8A6DF /* DefaultTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultTVC.swift; sourceTree = "<group>"; };
+		619F0722270C7C7D00D8A6DF /* TrendsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsVC.swift; sourceTree = "<group>"; };
+		619F0724270C7C8A00D8A6DF /* TrendsVCModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsVCModule.swift; sourceTree = "<group>"; };
+		619F0726270C7C9300D8A6DF /* Trends.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Trends.storyboard; sourceTree = "<group>"; };
+		619F072A270C7DFB00D8A6DF /* TrendsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendsCell.swift; sourceTree = "<group>"; };
+		619F0730270CA4C300D8A6DF /* DeclarativeTVC+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeclarativeTVC+.swift"; sourceTree = "<group>"; };
+		619F0732270CA76000D8A6DF /* SeparatorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorCell.swift; sourceTree = "<group>"; };
+		619F0734270CA76C00D8A6DF /* SeparatorCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SeparatorCell.xib; sourceTree = "<group>"; };
 		61AAAD5626F3770D0076ED38 /* LikingPostFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikingPostFeature.swift; sourceTree = "<group>"; };
 		61AAAD5F26F48F9C0076ED38 /* UserState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserState.swift; sourceTree = "<group>"; };
 		61AAAD6126F4908D0076ED38 /* UserFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserFeature.swift; sourceTree = "<group>"; };
@@ -364,6 +382,8 @@
 			children = (
 				6106CC7126C4247700643A6C /* LoadingCell.swift */,
 				6106CC7326C4247800643A6C /* LoadingCell.xib */,
+				619F0732270CA76000D8A6DF /* SeparatorCell.swift */,
+				619F0734270CA76C00D8A6DF /* SeparatorCell.xib */,
 				6106CC7226C4247700643A6C /* SegmentedCell.swift */,
 				6106CC7026C4247600643A6C /* SegmentedCell.xib */,
 			);
@@ -416,7 +436,11 @@
 		61516ECE26FF820E0014835F /* trends */ = {
 			isa = PBXGroup;
 			children = (
+				619F0729270C7CF500D8A6DF /* cells */,
 				61516ECF26FF82200014835F /* feature */,
+				619F0722270C7C7D00D8A6DF /* TrendsVC.swift */,
+				619F0724270C7C8A00D8A6DF /* TrendsVCModule.swift */,
+				619F0726270C7C9300D8A6DF /* Trends.storyboard */,
 			);
 			path = trends;
 			sourceTree = "<group>";
@@ -457,9 +481,8 @@
 		6173161726B59BA9007A04A3 /* feature */ = {
 			isa = PBXGroup;
 			children = (
-				61C6E45726B31267002D695B /* AuthState.swift */,
-				61C6E45C26B31320002D695B /* AuthFeature.swift */,
-				61C6E46626B560E3002D695B /* AuthCredentialsValidator.swift */,
+				619F0728270C7CCF00D8A6DF /* state */,
+				61C6E46C26B562AC002D695B /* dto */,
 			);
 			path = feature;
 			sourceTree = "<group>";
@@ -496,7 +519,11 @@
 		617FB85026BBCFD300E51D11 /* user */ = {
 			isa = PBXGroup;
 			children = (
+				61AAAD6F26F71CBC0076ED38 /* cells */,
 				61AAAD5C26F48C020076ED38 /* feature */,
+				61AAAD6326F5DEFB0076ED38 /* UserVC.swift */,
+				61AAAD6526F5DF070076ED38 /* UserVCModule.swift */,
+				61AAAD6726F5E33D0076ED38 /* User.storyboard */,
 			);
 			path = user;
 			sourceTree = "<group>";
@@ -608,7 +635,8 @@
 			children = (
 				6199E39A26B6A0E800FACDBD /* PresenterBase.swift */,
 				6199E3BC26B6A29500FACDBD /* PropsReceiver.swift */,
-				6106CC6D26C41C6500643A6C /* TVC.swift */,
+				619F071D270C6BC600D8A6DF /* VC.swift */,
+				619F071F270C6C0A00D8A6DF /* declarative */,
 				617FB87026BEA48D00E51D11 /* modelWatcher */,
 			);
 			path = presenter;
@@ -649,6 +677,7 @@
 				6106CC6926C4178600643A6C /* Int+shortText.swift */,
 				61DD7AB926CA9BE400B56313 /* UIView+inspectable.swift */,
 				61734E3226FB4ACC00B15E07 /* SwiftExtensions.swift */,
+				619F0730270CA4C300D8A6DF /* DeclarativeTVC+.swift */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -662,15 +691,38 @@
 			path = session;
 			sourceTree = "<group>";
 		};
+		619F071F270C6C0A00D8A6DF /* declarative */ = {
+			isa = PBXGroup;
+			children = (
+				6106CC6D26C41C6500643A6C /* TVC.swift */,
+				619F0720270C6C2C00D8A6DF /* DefaultTVC.swift */,
+			);
+			path = declarative;
+			sourceTree = "<group>";
+		};
+		619F0728270C7CCF00D8A6DF /* state */ = {
+			isa = PBXGroup;
+			children = (
+				61C6E45726B31267002D695B /* AuthState.swift */,
+				61C6E45C26B31320002D695B /* AuthFeature.swift */,
+				61C6E46626B560E3002D695B /* AuthCredentialsValidator.swift */,
+			);
+			path = state;
+			sourceTree = "<group>";
+		};
+		619F0729270C7CF500D8A6DF /* cells */ = {
+			isa = PBXGroup;
+			children = (
+				619F072A270C7DFB00D8A6DF /* TrendsCell.swift */,
+			);
+			path = cells;
+			sourceTree = "<group>";
+		};
 		61AAAD5C26F48C020076ED38 /* feature */ = {
 			isa = PBXGroup;
 			children = (
-				61AAAD6F26F71CBC0076ED38 /* cells */,
 				61AAAD5D26F48C0D0076ED38 /* dto */,
 				61AAAD5E26F48C150076ED38 /* state */,
-				61AAAD6326F5DEFB0076ED38 /* UserVC.swift */,
-				61AAAD6526F5DF070076ED38 /* UserVCModule.swift */,
-				61AAAD6726F5E33D0076ED38 /* User.storyboard */,
 			);
 			path = feature;
 			sourceTree = "<group>";
@@ -724,7 +776,6 @@
 			isa = PBXGroup;
 			children = (
 				6173161726B59BA9007A04A3 /* feature */,
-				61C6E46C26B562AC002D695B /* dto */,
 				61205CFC26B935DB007B93BE /* AuthVC.swift */,
 				61205D1426B93755007B93BE /* AuthVCModule.swift */,
 				617FB84626BB070C00E51D11 /* Auth.storyboard */,
@@ -917,6 +968,7 @@
 				6106CC6626C4157700643A6C /* Posts.storyboard in Resources */,
 				6106CC7B26C46C4F00643A6C /* MainTabs.storyboard in Resources */,
 				61DD7AC126CABF0100B56313 /* post.repost.svg in Resources */,
+				619F0735270CA76D00D8A6DF /* SeparatorCell.xib in Resources */,
 				617FB84726BB070C00E51D11 /* Auth.storyboard in Resources */,
 				6103B58E26A304CE00CD6A50 /* LaunchScreen.storyboard in Resources */,
 				61DD7AC226CABF0100B56313 /* post.comment.svg in Resources */,
@@ -924,6 +976,7 @@
 				6106CC7426C4247800643A6C /* SegmentedCell.xib in Resources */,
 				61DD7AC326CABF0100B56313 /* post.like.svg in Resources */,
 				6103B58B26A304CE00CD6A50 /* Assets.xcassets in Resources */,
+				619F0727270C7C9400D8A6DF /* Trends.storyboard in Resources */,
 				61AAAD6E26F5FC6A0076ED38 /* Easy.storyboard in Resources */,
 				6106CC7726C4247800643A6C /* LoadingCell.xib in Resources */,
 				61AAAD6826F5E33D0076ED38 /* User.storyboard in Resources */,
@@ -1078,6 +1131,7 @@
 				6199E35A26B5B21100FACDBD /* RxExtensions.swift in Sources */,
 				6106CC7626C4247800643A6C /* SegmentedCell.swift in Sources */,
 				6199E39B26B6A0E800FACDBD /* PresenterBase.swift in Sources */,
+				619F0721270C6C2C00D8A6DF /* DefaultTVC.swift in Sources */,
 				61C6E45826B31267002D695B /* AuthState.swift in Sources */,
 				617FB87D26BFC87E00E51D11 /* GeneralPostsState.swift in Sources */,
 				61C6E46F26B562B5002D695B /* ProfileDTO.swift in Sources */,
@@ -1087,6 +1141,7 @@
 				61205D1526B93755007B93BE /* AuthVCModule.swift in Sources */,
 				61AAAD5726F3770D0076ED38 /* LikingPostFeature.swift in Sources */,
 				61AAAD7826F71CCB0076ED38 /* UserFollowersFollowerCell.swift in Sources */,
+				619F0725270C7C8A00D8A6DF /* TrendsVCModule.swift in Sources */,
 				617FB87C26BFC87E00E51D11 /* EntitiesState.swift in Sources */,
 				617FB87E26BFC87E00E51D11 /* Posts2StepState.swift in Sources */,
 				6106CC6126C414CD00643A6C /* PostCell.swift in Sources */,
@@ -1096,6 +1151,7 @@
 				61C6E45D26B31320002D695B /* AuthFeature.swift in Sources */,
 				6103B58626A304CB00CD6A50 /* RootVC.swift in Sources */,
 				619ECF7326A6E24300D37B86 /* UserDefault.swift in Sources */,
+				619F071E270C6BC600D8A6DF /* VC.swift in Sources */,
 				617FB88D26BFD60700E51D11 /* EntittiesBaseFeature.swift in Sources */,
 				61AAAD6426F5DEFB0076ED38 /* UserVC.swift in Sources */,
 				617FB88B26BFD32000E51D11 /* PostsContainerFeature.swift in Sources */,
@@ -1125,6 +1181,7 @@
 				61516ED526FF8EB10014835F /* TrendsFeature.swift in Sources */,
 				6106CC6826C4157700643A6C /* PostsVC.swift in Sources */,
 				61DD7ABA26CA9BE400B56313 /* UIView+inspectable.swift in Sources */,
+				619F0731270CA4C300D8A6DF /* DeclarativeTVC+.swift in Sources */,
 				6106CC6A26C4178600643A6C /* Int+shortText.swift in Sources */,
 				61C6E47026B562B5002D695B /* CheckIdentifierAvailabilityDTO.swift in Sources */,
 				6106CC7926C45C5F00643A6C /* RouterFeature.swift in Sources */,
@@ -1134,6 +1191,7 @@
 				617FB84426BB054600E51D11 /* UIViewController+child.swift in Sources */,
 				617FB88F26C01DB100E51D11 /* Post2StepFeature.swift in Sources */,
 				619ECF3B26A6D78600D37B86 /* MockServer.swift in Sources */,
+				619F0723270C7C7D00D8A6DF /* TrendsVC.swift in Sources */,
 				6199E38F26B69E3C00FACDBD /* UI_DI.swift in Sources */,
 				61516EC726FF1AFE0014835F /* RxHolder.swift in Sources */,
 				6199E3C226B7F63B00FACDBD /* RootVCModule.swift in Sources */,
@@ -1147,6 +1205,8 @@
 				619ECF6626A6E20200D37B86 /* Session.swift in Sources */,
 				61205D3826B939A6007B93BE /* UIStackView+Helper.swift in Sources */,
 				619ECF5C26A6DFA000D37B86 /* Struct+safe.swift in Sources */,
+				619F0733270CA76000D8A6DF /* SeparatorCell.swift in Sources */,
+				619F072B270C7DFB00D8A6DF /* TrendsCell.swift in Sources */,
 				61734E3326FB4ACC00B15E07 /* SwiftExtensions.swift in Sources */,
 				61DD7AC826CAC26500B56313 /* ParchmentState.swift in Sources */,
 				61C6E46726B560E3002D695B /* AuthCredentialsValidator.swift in Sources */,

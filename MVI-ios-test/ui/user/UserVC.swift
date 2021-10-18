@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserVC: TVC<UserFeature.News> {
+final class UserVC: DefaultTVC<UserFeature.News> {
     override class var storyboardName: String {
         return "User"
     }

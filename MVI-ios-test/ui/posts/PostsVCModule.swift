@@ -12,7 +12,7 @@ import DITranquillity
 enum PostsVCModule {
     typealias ViewController = PostsVC
     
-    class Presenter<PostsState: EntitiesState, PostsFeature: Feature>: PresenterBase<ViewController, PostsFeature> where PostsState.Model == PostsContainer.Post, PostsState.LoadingMoreOptions == LoadingMoreDefault, PostsFeature.News == ViewController.Wish, PostsFeature.State == PostsState, PostsFeature.Wish == TableViewWishDefault {
+    class Presenter<PostsState: EntitiesState, PostsFeature: Feature>: PresenterBase<ViewController, PostsFeature> where PostsState.Model == PostsContainer.Post, PostsState.LoadingMoreOptions == LoadingMoreDefault, PostsFeature.News == ViewController.News, PostsFeature.State == PostsState, PostsFeature.Wish == TableViewWishDefault {
 
         private let likingPostFeature: LikingPostFeature = container.resolve()
         private let routerFeature: RouterFeature = container.resolve()
@@ -39,8 +39,8 @@ enum PostsVCModule {
                 }
             }
             
-            return TVC.Props(tableModel: TableModel(rows: rows),
-                             refreshing: state.currentState == .refreshing)
+            return .init(tableModel: TableModel(rows: rows),
+                         refreshing: state.currentState == .refreshing)
         }
         
         override func _actions(for state: State) -> ViewController.Actions {

@@ -22,7 +22,7 @@ class TrendsFeatureTest: XCTestCase {
         var trends = [tr1, tr2]
         var counter = 0
         let network = NetworkMock { api in
-            print("counter = \(counter) \(trends.map({ $0.id }))")
+            print("counter = \(counter) \(trends.map({ $0.id! }))")
             counter += 1
             let data = try! JSONEncoder().encode(trends)
             let response = Response(statusCode: 200, data: data)
@@ -35,14 +35,16 @@ class TrendsFeatureTest: XCTestCase {
         let result = scheduler.createObserver(TrendsFeature.State.self)
         
         scheduler.scheduleAt(0) { subscription = feature.subscribe(result) }
-        scheduler.scheduleAt(4) {
+        scheduler.scheduleAt(8) {
             trends = [tr2, tr1]
         }
-        scheduler.scheduleAt(6) {
+        scheduler.scheduleAt(15) {
             trends = [tr2, tr1, tr3]
         }
-        
-        scheduler.scheduleAt(8) {
+        scheduler.scheduleAt(17) {
+            trends = [tr2, tr1]
+        }
+        scheduler.scheduleAt(20) {
             print(result.events.map({ "\($0.value.element!) @ \($0.time)" }).joined(separator: "\n"))
             
             XCTAssert(result.lastElement(at: 0).trends.isEmpty)
@@ -51,6 +53,7 @@ class TrendsFeatureTest: XCTestCase {
             //all lastUpdatedId lags by 2 because of simulateProcessingDelay in TestScheduler
             
             XCTAssert(result.lastElement(at: 2).trends == [tr1, tr2])
+            XCTAssert(result.lastElement(at: 2).trends[0].previousPosition == nil)
             XCTAssert(result.lastElement(at: 2).lastUpdatedId == 0)
             
             XCTAssert(result.lastElement(at: 3).trends == [tr1, tr2])

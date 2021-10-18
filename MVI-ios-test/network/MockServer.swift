@@ -62,8 +62,6 @@ final class MockServer {
     }
     private var follows: [MockFollowerDTO]
     
-    private let version = "1.7.8"
-    
     @UserDefault("loggedUserId")
     var loggedUserId: Int?
     
@@ -154,6 +152,14 @@ final class MockServer {
         return try! JSONEncoder().encode(trends)
     }
     
+//    private var _firstTrendId: String?
+//    private var firstTrendId: String {
+//        if _firstTrendId == nil {
+//            _firstTrendId = trends[trends.count / 2].id
+//            print("changing \(trends[trends.count / 2].name)")
+//        }
+//        return _firstTrendId!
+//    }
     private func randomTrend() -> TrendDTO {
         TrendDTO(id: UUID().uuidString, name: MockServer.words.randomElement())
     }
@@ -166,14 +172,20 @@ final class MockServer {
         if random(5) == 1 {
             trends.remove(at: random(trends.count))
         }
-        if random(11) > 9 {
-            let changesCount = 1 + random(3)
+        if random(11) > 1 {
+            let changesCount = random(5) / 2
+            print("\(changesCount) changes in \(trends.count) trends")
             for _ in 0..<changesCount {
-                let randomIndex = random(trends.count)
+                let randomIndex = random(trends.count) //trends.firstIndex(where: { $0.id == self.firstTrendId })!
                 let trend = trends.remove(at: randomIndex)
-                let newIndex = randomIndex + (random(3) - 2) * (1 + random(4))
-                trends.insert(trend, at: max(0, min(trends.count, newIndex)))
+                let change = (random(3) - 1) * (1 + random(2))
+                let newIndex = randomIndex + change
+                let newIndexBounds = max(0, min(trends.count, newIndex))
+                print("index \(randomIndex) (\(change)) to \(newIndexBounds)")
+                trends.insert(trend, at: newIndexBounds)
             }
+        } else {
+            print("no changes")
         }
     }
     
@@ -193,6 +205,7 @@ final class MockServer {
         }
     }
     
+    private let version = "1.7.11"
     private init() {
         if let version = UserDefaults.standard.string(forKey: "mock_version"), version == self.version, let usersData = UserDefaults.standard.data(forKey: "mock_users"), let postsData = UserDefaults.standard.data(forKey: "mock_posts"), let followsData = UserDefaults.standard.data(forKey: "mock_follows"), let registeredUserData = UserDefaults.standard.data(forKey: "mock_registered") {
             users = try! JSONDecoder().decode([UserDTO].self, from: usersData)

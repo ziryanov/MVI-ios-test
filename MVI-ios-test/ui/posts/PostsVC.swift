@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class PostsVC: TVC<PostsLoadingFinishedNews> {
+final class PostsVC: DefaultTVC<PostsLoadingFinishedNews> {
     override class var storyboardName: String {
         return "Posts"
     }

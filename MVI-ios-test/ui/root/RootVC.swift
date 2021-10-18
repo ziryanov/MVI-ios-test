@@ -24,8 +24,8 @@ final class RootVC: VC<RootVCModule.Props, Void, RouterFeature.News> {
     override func render(props: RootVCModule.Props) { }
 
     private var rootScreen: Router.Screen?
-    override func accept(wish: Wish) {
-        switch wish {
+    override func accept(news: RouterFeature.News) {
+        switch news {
         case .changeRoot(let router):
             activityView.stopAnimating()
             guard rootScreen != router.screen else { fatalError("no!") }

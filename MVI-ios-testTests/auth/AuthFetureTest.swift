@@ -50,10 +50,10 @@ class AuthFetureTest: XCTestCase {
         var subscription: Disposable! = nil
         
         scheduler.scheduleAt(0) { subscription = feature.subscribe(result) }
-        scheduler.scheduleAt(10) { feature.accept(.startInput(.identifier)) }
-        scheduler.scheduleAt(20) { feature.accept(.changeInput(.identifier, "qw")) }
-        scheduler.scheduleAt(30) { feature.accept(.changeInput(.identifier, "qwe")) }
-        scheduler.scheduleAt(40) { feature.accept(.finishInput) }
+        scheduler.scheduleAt(10) { feature.accept(wish: .startInput(.identifier)) }
+        scheduler.scheduleAt(20) { feature.accept(wish: .changeInput(.identifier, "qw")) }
+        scheduler.scheduleAt(30) { feature.accept(wish: .changeInput(.identifier, "qwe")) }
+        scheduler.scheduleAt(40) { feature.accept(wish: .finishInput) }
         
         scheduler.scheduleAt(100) {
             XCTAssert(result.lastElement(at: 10).editingText == .identifier)
@@ -94,9 +94,9 @@ class AuthFetureTest: XCTestCase {
         var subscription: Disposable! = nil
         
         scheduler.scheduleAt(0) { subscription = feature.subscribe(result) }
-        scheduler.scheduleAt(10) { feature.accept(.startInput(.identifier)) }
-        scheduler.scheduleAt(20) { feature.accept(.changeInput(.identifier, "qw")) }
-        scheduler.scheduleAt(30) { feature.accept(.startInput(.password)) }
+        scheduler.scheduleAt(10) { feature.accept(wish: .startInput(.identifier)) }
+        scheduler.scheduleAt(20) { feature.accept(wish: .changeInput(.identifier, "qw")) }
+        scheduler.scheduleAt(30) { feature.accept(wish: .startInput(.password)) }
         
         scheduler.scheduleAt(100) {
             XCTAssert(result.lastElement(at: 30).editingText == .password)
@@ -129,38 +129,38 @@ class AuthFetureTest: XCTestCase {
             subscription2 = feature.news.subscribe(newsResult)
         }
         scheduler.scheduleAt(10) {
-            feature.accept(.startRequest)
+            feature.accept(wish: .startRequest)
         }
         scheduler.scheduleAt(20) {
             validator.validIdentifier = nil
             validator.validPassword = "2"
-            feature.accept(.startRequest)
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(30) {
-            feature.accept(.changeInput(.identifier, nil))
-            feature.accept(.changeInput(.password, "3"))
-            feature.accept(.startRequest)
+            feature.accept(wish: .changeInput(.identifier, nil))
+            feature.accept(wish: .changeInput(.password, "3"))
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(40) {
             validator.validPassword = "3"
-            feature.accept(.startRequest)
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(50) {
-            feature.accept(.changeInput(.password, "3"))
-            feature.accept(.startRequest)
+            feature.accept(wish: .changeInput(.password, "3"))
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(60) {
-            feature.accept(.changeSignInOrSignUp(.signUp))
-            feature.accept(.startRequest)
+            feature.accept(wish: .changeSignInOrSignUp(.signUp))
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(70) {
-            feature.accept(.toggleAcceptPolicy)
-            feature.accept(.startRequest)
+            feature.accept(wish: .toggleAcceptPolicy)
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(100) {
@@ -240,23 +240,23 @@ class AuthFetureTest: XCTestCase {
             feature.news.subscribe(newsResult).disposed(by: disposeBag)
         }
         scheduler.scheduleAt(10) {
-            feature.accept(.startRequest)
+            feature.accept(wish: .startRequest)
         }
         scheduler.scheduleAt(20) {
-            feature.accept(.changeInput(.identifier, "1"))
-            feature.accept(.changeInput(.password, "2"))
-            feature.accept(.startRequest)
+            feature.accept(wish: .changeInput(.identifier, "1"))
+            feature.accept(wish: .changeInput(.password, "2"))
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(30) {
-            feature.accept(.changeSignInOrSignUp(.signUp))
-            feature.accept(.toggleAcceptPolicy)
-            feature.accept(.startRequest)
+            feature.accept(wish: .changeSignInOrSignUp(.signUp))
+            feature.accept(wish: .toggleAcceptPolicy)
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(40) {
             signUpFail = false
-            feature.accept(.startRequest)
+            feature.accept(wish: .startRequest)
         }
         
         scheduler.scheduleAt(100) {

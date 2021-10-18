@@ -34,7 +34,7 @@ enum AuthVCModule {
         let startRequest: Command
     }
 
-    class Presenter<View: PropsReceiver & ActionsReceiver & WishConsumer & PresenterHolder & AnyObject>: PresenterBase<View, AuthFeature>  where View.Wish == AuthFeature.News, View.Props == Props, View.Actions == Actions {
+    class Presenter<View: PropsReceiver & ActionsReceiver & NewsConsumer & PresenterHolder & AnyObject>: PresenterBase<View, AuthFeature>  where View.News == AuthFeature.News, View.Props == Props, View.Actions == Actions {
         
         override func _props(for state: State) -> Props {
             Props(identifier: state.identifier.value,

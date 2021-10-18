@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18122"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--TrendsVC-->
+        <scene sceneID="M2z-F9-0Ib">
+            <objects>
+                <tableViewController storyboardIdentifier="TrendsVC" id="g1J-F1-elS" customClass="TrendsVC" customModule="MVI_ios_test" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="40" sectionHeaderHeight="28" sectionFooterHeight="28" id="JvG-ML-L9X">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="TrendsCell" rowHeight="40" id="VLS-Kz-a8c" customClass="TrendsCell" customModule="MVI_ios_test" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="24.5" width="414" height="40"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VLS-Kz-a8c" id="QMP-yB-LDb">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="40"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1_" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="je5-dc-ciL">
+                                            <rect key="frame" x="10" y="10" width="19" height="20"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name_" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CJf-v6-Y8o">
+                                            <rect key="frame" x="39" y="9.5" width="51.5" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-10000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZNg-PU-mMb">
+                                            <rect key="frame" x="334" y="9.5" width="56.5" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QBm-XL-Mx9">
+                                            <rect key="frame" x="0.0" y="39" width="414" height="1"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="zIs-Z6-vBY"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="je5-dc-ciL" firstAttribute="top" secondItem="QMP-yB-LDb" secondAttribute="top" constant="10" id="AMq-E5-Z46"/>
+                                        <constraint firstItem="je5-dc-ciL" firstAttribute="centerY" secondItem="QMP-yB-LDb" secondAttribute="centerY" id="SPB-jX-LPF"/>
+                                        <constraint firstItem="QBm-XL-Mx9" firstAttribute="leading" secondItem="QMP-yB-LDb" secondAttribute="leading" id="TUX-wT-70C"/>
+                                        <constraint firstAttribute="trailing" secondItem="QBm-XL-Mx9" secondAttribute="trailing" id="UcZ-xt-mc9"/>
+                                        <constraint firstItem="ZNg-PU-mMb" firstAttribute="centerY" secondItem="QMP-yB-LDb" secondAttribute="centerY" id="fsa-ev-uIS"/>
+                                        <constraint firstItem="je5-dc-ciL" firstAttribute="leading" secondItem="QMP-yB-LDb" secondAttribute="leading" constant="10" id="hov-oY-gg1"/>
+                                        <constraint firstItem="CJf-v6-Y8o" firstAttribute="leading" secondItem="je5-dc-ciL" secondAttribute="trailing" constant="10" id="ind-A6-Dke"/>
+                                        <constraint firstAttribute="trailing" secondItem="ZNg-PU-mMb" secondAttribute="leading" constant="80" id="nmS-Uw-rcX"/>
+                                        <constraint firstItem="CJf-v6-Y8o" firstAttribute="centerY" secondItem="QMP-yB-LDb" secondAttribute="centerY" id="sjo-hm-Dbq"/>
+                                        <constraint firstAttribute="bottom" secondItem="QBm-XL-Mx9" secondAttribute="bottom" id="vcR-Za-6Y6"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="change" destination="ZNg-PU-mMb" id="WaX-xt-0kx"/>
+                                    <outlet property="name" destination="CJf-v6-Y8o" id="VSU-P8-gnA"/>
+                                    <outlet property="position" destination="je5-dc-ciL" id="4AS-M0-WGs"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="g1J-F1-elS" id="1bO-Rk-i96"/>
+                            <outlet property="delegate" destination="g1J-F1-elS" id="eBQ-op-OhO"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aWv-HA-pzu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-110.14492753623189" y="50.892857142857139"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
