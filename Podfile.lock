@@ -15,6 +15,45 @@ PODS:
   - DTTextField (0.4.0)
   - FantasticSnowflake (2.2.0):
     - Reindeers
+  - Firebase/Auth (8.5.0):
+    - Firebase/CoreOnly
+    - FirebaseAuth (~> 8.5.0)
+  - Firebase/CoreOnly (8.5.0):
+    - FirebaseCore (= 8.5.0)
+  - FirebaseAuth (8.5.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GTMSessionFetcher/Core (~> 1.5)
+  - FirebaseCore (8.5.0):
+    - FirebaseCoreDiagnostics (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Logger (~> 7.4)
+  - FirebaseCoreDiagnostics (8.5.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleUtilities/Environment (~> 7.4)
+    - GoogleUtilities/Logger (~> 7.4)
+    - nanopb (~> 2.30908.0)
+  - GoogleDataTransport (9.1.0):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/AppDelegateSwizzler (7.5.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (7.5.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.5.0):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/Network (7.5.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.5.0)"
+  - GoogleUtilities/Reachability (7.5.0):
+    - GoogleUtilities/Logger
+  - GTMSessionFetcher/Core (1.6.1)
   - IHKeyboardAvoiding (4.7)
   - Kingfisher (6.3.1)
   - LGButton (1.1.6):
@@ -25,10 +64,16 @@ PODS:
   - Moya/RxSwift (14.0.0):
     - Moya/Core
     - RxSwift (~> 5.0)
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
   - NVActivityIndicatorView (5.1.1):
     - NVActivityIndicatorView/Base (= 5.1.1)
   - NVActivityIndicatorView/Base (5.1.1)
   - Parchment (3.0.1)
+  - PromisesObjC (2.0.0)
   - Reindeers (2.2.0)
   - RxCocoa (5.1.1):
     - RxRelay (~> 5)
@@ -48,6 +93,7 @@ DEPENDENCIES:
   - Dodo
   - DTTextField
   - FantasticSnowflake
+  - Firebase/Auth
   - IHKeyboardAvoiding
   - Kingfisher
   - LGButton (from `https://github.com/ziryanov/LGButton.git`)
@@ -64,7 +110,16 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - DateToolsSwift
     - FantasticSnowflake
+    - Firebase
+    - FirebaseAuth
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - GoogleDataTransport
+    - GoogleUtilities
+    - GTMSessionFetcher
     - Kingfisher
+    - nanopb
+    - PromisesObjC
     - Reindeers
     - RxTest
     - SwiftIconFont
@@ -103,13 +158,22 @@ SPEC CHECKSUMS:
   Dodo: e13a732c6f95b48fbf7001d483c0f4ee967a78dd
   DTTextField: 4b9bab01faec50a98d42d24ba39ed122461f866f
   FantasticSnowflake: 333f4bc4165066de717a711be9b6bde95831853a
+  Firebase: ff8c73105b90e33e1dc6c8e5445d7adc2ccdc7c1
+  FirebaseAuth: b152ea261b60eeb9419ae7e5bf34761382b33277
+  FirebaseCore: 1c1ca72483b59b17050f5b4cec4fb748425a3901
+  FirebaseCoreDiagnostics: 7bf55d386f9fc690d971b70a582142321a390eb8
+  GoogleDataTransport: 85fd18ff3019bb85d3f2c551d04c481dedf71fc9
+  GoogleUtilities: eea970f4a389963963bffe8d8fabe43540678b9c
+  GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   IHKeyboardAvoiding: 4cae0880c3975feffa278495df894c5166e71ad0
   Kingfisher: 016c8b653a35add51dd34a3aba36b580041acc74
   LGButton: fb15cd097d469401f5d2eb332ce5bc09dc457679
   LTHRadioButton: b20980614572f7911272a6b8aa79ec0fdc9a74d4
   Moya: 5b45dacb75adb009f97fde91c204c1e565d31916
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
   Parchment: 466a1cfb6151780db8acb4bbedc2d9c6bfa1e2ff
+  PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Reindeers: 0c781130bc9088550c70d02a1caf3e328a4b1126
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
@@ -118,6 +182,6 @@ SPEC CHECKSUMS:
   SwiftIconFont: 0a772c5ac65a40c9b0675efa37b4928158bd8e43
   SwiftLazy: 1657354f43dbd6a0a79e00ad67558d655c77bdc9
 
-PODFILE CHECKSUM: 005f1620a6ac3fe27f8e0cc1f70de4916821d89c
+PODFILE CHECKSUM: dae3c2b8a26ad6319bbecc22ce475545ab237146
 
 COCOAPODS: 1.10.1

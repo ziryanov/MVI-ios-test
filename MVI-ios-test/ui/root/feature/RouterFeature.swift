@@ -8,14 +8,17 @@
 import Foundation
 import RxSwift
 
-enum RouterWish {
-    case showModal(Router.Screen)
-    case push(Router.Screen)
-}
-
 final class RouterFeature: BaseFeature<RouterFeature.Wish, RouterFeature.State, RouterFeature.News, RouterFeature.InnerPart> {
-    typealias Wish = RouterWish
-    typealias State = Void
+    enum Wish {
+        case showModal(Router.Screen)
+        case push(Router.Screen)
+    }
+    
+    enum State {
+        case inProgress
+        case error(Error)
+    }
+    
     enum News {
         case changeRoot(Router)
         case showModal(Router)
@@ -23,7 +26,7 @@ final class RouterFeature: BaseFeature<RouterFeature.Wish, RouterFeature.State, 
     }
     
     init(sessionFeature: SessionFeature) {
-        super.init(initialState: (), innerPart: InnerPart(sessionFeature: sessionFeature))
+        super.init(initialState: .inProgress, innerPart: InnerPart(sessionFeature: sessionFeature))
     }
 
     struct InnerPart: FeatureInnerPart {

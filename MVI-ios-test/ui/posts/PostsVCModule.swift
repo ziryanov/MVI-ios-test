@@ -24,15 +24,21 @@ enum PostsVCModule {
             } else {
                 rows.append(contentsOf: state.loaded.map { post in
                     PostCellVM(post: post,
-                               userPressed: Command(action: { [unowned routerFeature] in
-                                routerFeature.accept(wish: .push(.user(post.userBasic)))
-                               }),
-                               likePressed: Command(action: { [unowned likingPostFeature] in
-                                likingPostFeature.accept(wish: .init(model: post))
-                               }),
-                               commentPressed: Command(action: {}),
-                               repostPressed: Command(action: {}),
-                               selectCommand: Command(action: {}))
+                               actions: .init(userPressed: Command(action: { [unowned routerFeature] in
+                        routerFeature.accept(wish: .push(.user(post.userBasic)))
+                    }),
+                                              likePressed: Command(action: { [unowned likingPostFeature] in
+                        likingPostFeature.accept(wish: .init(model: post))
+                    }),
+                                              commentPressed: Command(action: {
+                        
+                    }),
+                                              repostPressed: Command(action: {
+                        
+                    })),
+                               selectCommand: Command(action: {
+                        
+                    }))
                 })
                 if state.loadMoreEnabled(for: .more) {
                     rows.append(LoadingCellVM())

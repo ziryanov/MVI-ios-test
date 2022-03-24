@@ -78,8 +78,6 @@ extension PrimitiveSequence where Trait == SingleTrait {
     }
 }
 
-fileprivate var disposeBagContext: UInt8 = 0
-fileprivate var disposeBagsCollectionContext: UInt8 = 0
 extension Reactive where Base: AnyObject {
     func synchronizedBag<T>( _ action: () -> T) -> T {
         objc_sync_enter(base)
@@ -89,8 +87,9 @@ extension Reactive where Base: AnyObject {
     }
 }
 
+fileprivate var disposeBagContext: UInt8 = 0
+fileprivate var disposeBagsCollectionContext: UInt8 = 0
 public extension Reactive where Base: AnyObject {
-    
     /// a unique DisposeBag that is related to the Reactive.Base instance only for Reference type
     var disposeBag: DisposeBag {
         get {
